@@ -29,3 +29,5 @@ techreport.tex
 *.sty
 *.upa
 *.utf8.md
+templates/tech-report-cover-eng.docx
+templates/tech-report-cover-fra.docx
