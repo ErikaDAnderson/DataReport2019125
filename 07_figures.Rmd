@@ -1,4 +1,19 @@
 # FIGURES
 
+(ref:mapfish) Fishing tow locations during the `r surveyName` from `r surveyDateRange` on the *`r vessel`*. The offshore LFS 1142 trawl net (orange circles) was used for 2 tows and the coastal LFS 7742 trawl net (red triangles) was used for 20 tows. Net testing and aborted tows are not shown.
+
+```{r mapfish, fig.pos="H", fig.cap = "(ref:mapfish)", warning=FALSE}
+
+  basemap +
+    geom_point(data = tows,
+      aes(START_LONG, START_LAT, shape = TARGET_DEPTH, color = TARGET_DEPTH),
+             size = 3) +
+    scale_color_manual(values = c("orange", "darkred")) +
+    theme(legend.position = "none")
+
+
+```
+
+
 \FloatBarrier
 \newpage
