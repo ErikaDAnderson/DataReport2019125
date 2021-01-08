@@ -4,7 +4,7 @@
 .DS_Store
 
 _book
-csas-style
+#csas-style
 knitr-cache-docx
 knitr-cache-pdf
 knitr-cache-tex
@@ -21,13 +21,20 @@ techreport.tex
 *.html
 *.knit.md
 *.log
-*.pdf
+#*.pdf
 *.png
 *.rda
 *.rds
-*.Rproj
-*.sty
+#*.Rproj
+#*.sty
 *.upa
 *.utf8.md
 templates/tech-report-cover-eng.docx
 templates/tech-report-cover-fra.docx
+csas-style/pages/AquatTechCouvInt.pdf
+csas-style/pages/AquatTechInsCover.pdf
+csas-style/res-doc-french.sty
+csas-style/res-doc.sty
+csas-style/sr-french.sty
+csas-style/sr.sty
+csas-style/tech-report-french.sty
