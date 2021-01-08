@@ -1,0 +1,4 @@
+# FIGURES
+
+\FloatBarrier
+\newpage
