@@ -97,20 +97,15 @@ options(kableExtra.latex.load_packages = FALSE)
 #  are used throughout the document. To make the document all in french, change
 #  the line in the YAML header above to `french: true`
 meta <- rmarkdown::metadata$output
-if(length(grep("pdf", names(meta)))){
+if (length(grep("pdf", names(meta)))) {
   french <- meta$`csasdown::techreport_pdf`$french
   prepub <- meta$`csasdown::techreport_pdf`$prepub
-}else if(length(grep("word", names(meta)))){
+} else if (length(grep("word", names(meta)))) {
   french <- meta$`csasdown::techreport_word`$french
   prepub <- meta$`csasdown::techreport_word`$prepub
 }
 
 # add other packages here:
-#library(dplyr)
-#library(ggplot2)
-#library(readr)
-#library(rosettafish)
-#library(tibble)
 library(tidyverse)
 library(csasdown)
 library(car) # statistics
@@ -139,7 +134,7 @@ CRUISEnum <- 2019125
 
 surveyName <- "ecosystem-based juvenile Pacific Salmon survey"
 
-surveyDateRange <- "September 30 to October 15, 2019"
+surveyDateRange <- "September 30 to October 8, 2019"
 
 surveyYear <- "2019"
 
@@ -149,8 +144,8 @@ vessel <- "CFV Sea Crest"
 
 ```{r locations}
 
-# location data for maps from bridge data
-# use sql query: SELECT BRIDGE_COMPLETE.CRUISE, BRIDGE_COMPLETE.STATION_ID, BRIDGE_COMPLETE.EVENT, BRIDGE_COMPLETE.STATION, BRIDGE_COMPLETE.YEAR, BRIDGE_COMPLETE.MONTH, BRIDGE_COMPLETE.DAY, BRIDGE_COMPLETE.UNUSABLE, BRIDGE_COMPLETE.START_TIME, BRIDGE_COMPLETE.START_LAT, BRIDGE_COMPLETE.START_LONG, BRIDGE_COMPLETE.END_LAT, BRIDGE_COMPLETE.END_LONG, BRIDGE_COMPLETE.DISTANCE, BRIDGE_COMPLETE.DUR, BRIDGE_COMPLETE.[SOG-KTS], BRIDGE_COMPLETE.HEADING, BRIDGE_COMPLETE.START_BOT_DEPTH, BRIDGE_COMPLETE.END_BOT_DEPTH, BRIDGE_COMPLETE.NET_OPENING_WIDTH, BRIDGE_COMPLETE.NET_OPENING_HEIGHT, BRIDGE_COMPLETE.HEAD_DEPTH, BRIDGE_COMPLETE.WARP, BRIDGE_COMPLETE.GEAR FROM BRIDGE_COMPLETE WHERE (((BRIDGE_COMPLETE.CRUISE)="2019125"));
+# location data for maps from bridge data for fishing tows
+# use sql 2019125_tows_orig: SELECT BRIDGE_COMPLETE.CRUISE, BRIDGE_COMPLETE.STATION_ID, BRIDGE_COMPLETE.EVENT, BRIDGE_COMPLETE.STATION, BRIDGE_COMPLETE.YEAR, BRIDGE_COMPLETE.MONTH, BRIDGE_COMPLETE.DAY, BRIDGE_COMPLETE.UNUSABLE, BRIDGE_COMPLETE.START_TIME, BRIDGE_COMPLETE.START_LAT, BRIDGE_COMPLETE.START_LONG, BRIDGE_COMPLETE.END_LAT, BRIDGE_COMPLETE.END_LONG, BRIDGE_COMPLETE.DISTANCE, BRIDGE_COMPLETE.DUR, BRIDGE_COMPLETE.[SOG-KTS], BRIDGE_COMPLETE.HEADING, BRIDGE_COMPLETE.START_BOT_DEPTH, BRIDGE_COMPLETE.END_BOT_DEPTH, BRIDGE_COMPLETE.NET_OPENING_WIDTH, BRIDGE_COMPLETE.NET_OPENING_HEIGHT, BRIDGE_COMPLETE.HEAD_DEPTH, BRIDGE_COMPLETE.WARP, BRIDGE_COMPLETE.GEAR FROM BRIDGE_COMPLETE WHERE (((BRIDGE_COMPLETE.CRUISE)="2019125"));
 
 # load as csv
 tows_orig <- readr::read_csv("data/csv/2019125_tows_orig.csv",
@@ -182,16 +177,33 @@ tows_orig <- readr::read_csv("data/csv/2019125_tows_orig.csv",
                                GEAR = col_character()
                                ))
 
+# location data for CTD casts from OCEAN_CTD table
+# sql 2019125_ctd_orig
+# SELECT BRIDGE_COMPLETE.CRUISE, OCEAN_CTD.STATION_ID, OCEAN_CTD.EVENT, OCEAN_CTD.STATION, OCEAN_CTD.CTD_INSTRUMENT, OCEAN_CTD.CTD_SERIAL_NUMBER, OCEAN_CTD.DATE_UTC, OCEAN_CTD.TIME_UTC, OCEAN_CTD.CTD_LAT, OCEAN_CTD.CTD_LONG, OCEAN_CTD.BOTTOM_DEPTH, OCEAN_CTD.CTD_DEPTH
+# FROM OCEAN_CTD INNER JOIN BRIDGE_COMPLETE ON OCEAN_CTD.STATION_ID = BRIDGE_COMPLETE.STATION_ID
+# WHERE (((BRIDGE_COMPLETE.CRUISE)="2019125"));
+
+# # load as csv
+ctd_orig <- readr::read_csv("data/csv/2019125_ctd_orig.csv")
+
+# location data for vertical plankton tows from PLANKTON table
+# sql
+# # load as csv
+plankton_orig <- readr::read_csv("data/csv/2019125_planton_orig.csv")
+
+
+
+
 # wrangle data
 tows <- tows_orig %>%
   mutate(DATE = ymd(str_c(YEAR, MONTH, DAY, sep = "-")),
          TARGET_DEPTH = as.factor(HEAD_DEPTH)) 
 
 # find min and max lat and longs for limits to basemap
-minLat <- min(tows$START_LAT)
-maxLat <- max(tows$START_LAT) 
-minLon <- min(tows$START_LONG)
-maxLon <- max(tows$START_LONG)
+minLat <- min(tows$START_LAT) - 0.5
+maxLat <- max(tows$START_LAT) + 0.5
+minLon <- min(tows$START_LONG) - 0.5
+maxLon <- max(tows$START_LONG) + 0.5
 
 # load basemap from coastal shapefile
 coast <- readOGR("data/Spatial/Land.shp", verbose = FALSE)
