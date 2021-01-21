@@ -8,7 +8,7 @@ author: |
   Tyler B. Zubkowski
 author_list: "Anderson, E.D., King, J.R. and Zubkowski, T.B."
 region: Pacific Region
-isbn: "978-0-660-37019-4"
+isbn: "xxxx"
 address: |
   Pacific Biological Station\
   Fisheries and Oceans Canada, 3190 Hammond Bay Road\
@@ -116,12 +116,11 @@ library(float) # fix the table-page breaks
 library(broom) # display linear model on LW graphs easily
 library(xfun) # to convert numeric values to text
 library(measurements) #to convert lat/lon values
-library(openxlsx) # load excel data
+#library(openxlsx) # load excel data
 library(rgdal) # to load shapefiles
 library(naniar) # function replace_with_na
 library(kableExtra) # better table layouts
-library(geosphere) # distance between lat and long
-library(fossil) # calculate heading
+
 
 ```
 
@@ -186,15 +185,27 @@ tows_orig <- readr::read_csv("data/csv/2019125_tows_orig.csv",
 # # load as csv
 ctd_orig <- readr::read_csv("data/csv/2019125_ctd_orig.csv")
 
+ctd_simp <- ctd_orig %>%
+  mutate(EVENT_TYPE = "ctd",
+         LAT = CTD_LAT,
+         LONG = CTD_LONG) %>%
+  select(EVENT_TYPE, LAT, LONG)
+
 # location data for vertical plankton tows from PLANKTON table
 # sql
 # # load as csv
-plankton_orig <- readr::read_csv("data/csv/2019125_planton_orig.csv")
+plankton_orig <- readr::read_csv("data/csv/2019125_plankton_orig.csv")
 
+plankton_simp <- plankton_orig %>%
+  mutate(EVENT_TYPE = "bongo",
+         LAT = BONGO_LAT,
+         LONG = BONGO_LONG) %>%
+  select(EVENT_TYPE, LAT, LONG)
 
+# combine ctd and plankton data for map
+ocean <- rbind(ctd_simp, plankton_simp)
 
-
-# wrangle data
+# wrangle tow data
 tows <- tows_orig %>%
   mutate(DATE = ymd(str_c(YEAR, MONTH, DAY, sep = "-")),
          TARGET_DEPTH = as.factor(HEAD_DEPTH)) 
@@ -217,6 +228,368 @@ coast <- readOGR("data/Spatial/Land.shp", verbose = FALSE)
     labs(x = "Longitude",
          y = "Laititude") +
     theme_bw()
+
+```
+
+```{r net}
+
+net <- tows %>%
+  summarize(Vertavg = round(mean(NET_OPENING_HEIGHT),0),
+            Vertmin = min(NET_OPENING_HEIGHT),
+            Vertmax = max(NET_OPENING_HEIGHT),
+            Horavg = round(mean(NET_OPENING_WIDTH), 0),
+            Hormin = min(NET_OPENING_WIDTH),
+            Hormax = max(NET_OPENING_WIDTH), .groups = "drop")
+
+```
+
+```{r salmon}
+
+# # sql query
+# SELECT CRUISE_INFO.CRUISE, BRIDGE.EVENT, BRIDGE.Year, BRIDGE.Month, BRIDGE.Day, BRIDGE.Date, BRIDGE.START_LAT, BRIDGE.START_LONG, BRIDGE.DISTANCE, BRIDGE.NET_OPENING_WIDTH, BRIDGE.NET_OPENING_HEIGHT, BRIDGE.HEAD_DEPTH, BRIDGE.[ESTIMATED_CATCHES_ BY_WT], BRIDGE.PK_JUV, BRIDGE.CM_JUV, BRIDGE.CM_ADULT, BRIDGE.SE_JUV, BRIDGE.CO_JUV, BRIDGE.CK_JUV, BRIDGE.GEAR_TYPE, BRIDGE.COMMENTS
+# FROM (CRUISE_INFO INNER JOIN STATION_INFO ON CRUISE_INFO.CRUISE = STATION_INFO.CRUISE) INNER JOIN BRIDGE ON STATION_INFO.STATION_ID = BRIDGE.STATION_ID
+# WHERE (((CRUISE_INFO.CRUISE)='2019125'));
+
+salmondf_orig <- readr::read_csv("data/csv/2019125_salmondf_orig.csv",
+                                 col_types = cols(
+                CRUISE = col_double(),
+                CRUISE = col_double(),
+                EVENT = col_double(),
+                Year = col_double(),
+                Month = col_character(),
+                Day = col_double(),
+                # MS Access and R date format conflict
+                Date = col_character(), 
+                START_LAT = col_double(),
+                START_LONG = col_double(),
+                DISTANCE = col_double(),
+                NET_OPENING_WIDTH = col_double(),
+                NET_OPENING_HEIGHT = col_double(),
+                HEAD_DEPTH = col_double(),
+                `ESTIMATED_CATCHES_ BY_WT` = col_character(),
+                PK_JUV = col_double(),
+                CM_JUV = col_double(),
+                CM_ADULT = col_double(),
+                SE_JUV = col_double(),
+                CO_JUV = col_double(),
+                CK_JUV = col_double(),
+                GEAR_TYPE = col_character(),
+                COMMENTS = col_character()
+              ))
+
+# wrangle data for volume swept CPUE
+salmondf <- salmondf_orig %>%
+  mutate(DISTANCE_KM = DISTANCE * 1.852,
+         WIDTH_KM = NET_OPENING_WIDTH/1000,
+         HEIGHT_KM = NET_OPENING_HEIGHT/1000,
+         MOUTH_KM2 = WIDTH_KM * HEIGHT_KM,
+         VOLUME_KM3 = MOUTH_KM2 * DISTANCE_KM,
+         PK_JUV_KM3 = PK_JUV/VOLUME_KM3,
+         CM_JUV_KM3 = CM_JUV/VOLUME_KM3,
+         SE_JUV_KM3 = SE_JUV/VOLUME_KM3,
+         CO_JUV_KM3 = CO_JUV/VOLUME_KM3,
+         CK_JUV_KM3 = CK_JUV/VOLUME_KM3)
+              
+
+```
+
+```{r catch}
+
+# # sql query
+# SELECT STATION_INFO.CRUISE, BCSI_ECOSYSTEM_SPECIES_TOTALS.STATION_ID, BCSI_ECOSYSTEM_SPECIES_TOTALS.SPECIES_CODE, BCSI_ECOSYSTEM_SPECIES_TOTALS.SPECIES_COMMON_NAME, BCSI_ECOSYSTEM_SPECIES_TOTALS.PIECES, BCSI_ECOSYSTEM_SPECIES_TOTALS.WT
+#  FROM (STATION_INFO INNER JOIN BCSI_ECOSYSTEM_SPECIES_TOTALS ON STATION_INFO.STATION_ID = BCSI_ECOSYSTEM_SPECIES_TOTALS.STATION_ID) INNER JOIN BRIDGE ON (BCSI_ECOSYSTEM_SPECIES_TOTALS.STATION_ID = BRIDGE.STATION_ID) AND (STATION_INFO.STATION_ID = BRIDGE.STATION_ID)
+#  WHERE (((STATION_INFO.CRUISE)='2019125'))
+
+catch_orig <- readr::read_csv("data/csv/2019125_catch_orig.csv",
+                              col_types = cols(
+  CRUISE = col_double(),
+  STATION_ID = col_character(),
+  SPECIES_CODE = col_character(),
+  SPECIES_COMMON_NAME = col_character(),
+  PIECES = col_double(),
+  WT = col_double()
+))
+
+# upload GFBIO species table for common and scientific names
+species_orig <- read_csv("data/csv/C_Species.csv",
+                         col_types = cols(
+  SPECIES_CODE = col_character(),
+  SPECIES_DESC = col_character(),
+  ROW_VERSION = col_double(),
+  SPECIES_COMMON_NAME = col_character(),
+  SPECIES_SCIENCE_NAME = col_character(),
+  ITIS_TSN = col_double(),
+  TAXONOMIC_RANK = col_character(),
+  RSTY_ID = col_double(),
+  PARENT_RSTY_ID = col_double(),
+  PARENT_TAXONOMIC_UNIT = col_character(),
+  SPECIES_GROUPING = col_character(),
+  LSID = col_character()
+))
+
+# simiplify species table
+species <- species_orig %>%
+  select(SPECIES_CODE, SPECIES_COMMON_NAME, SPECIES_SCIENCE_NAME)
+
+# pull mixed jelly/squid data out and remake to add seperate rows
+mix <- catch_orig %>%
+  filter(SPECIES_COMMON_NAME == "WATER JELLY/SQUID MIX")
+
+# 50% assumption for mix
+mixWT <- mix %>%
+  pull(WT)
+mixWT50 <- mixWT * 0.5
+
+sepMix <- tibble(
+  CRUISE = 2019125,
+  STATION_ID = "BCSI-2019125-T02",
+  SPECIES_CODE = c("3R5", "92D"),
+  SPECIES_COMMON_NAME = c("WATER JELLY", "OPALESCENT SQUID"),
+  PIECES = NA,
+  WT = mixWT50)
+
+# wrangle data
+catch <- catch_orig %>%
+  # omit any unusable tows; no aborted tows in 2019-125
+  # remove salmon mix as idividual species are already listed
+  filter(SPECIES_COMMON_NAME != "SALMON MIX") %>%
+    filter(SPECIES_COMMON_NAME != "WATER JELLY/SQUID MIX")
+
+# add seperate jelly and squid mix values
+# remove when database back end is updated
+catch <- rbind(sepMix, catch)
+
+catch <- catch %>%  
+  # fix counts that are subsample (not total) from same station ***checked datasheets
+  # ****remove once database back end updated
+  mutate(PIECES2 = case_when(
+    STATION_ID == "BCSI-2019125-QCST03" & SPECIES_CODE == "108J" ~ 284,
+    STATION_ID == "BCSI-2019125-QCST03" & SPECIES_CODE == "112J" ~ 231,
+    STATION_ID == "BCSI-2019125-QCST03" & SPECIES_CODE == "115J" ~ 9,
+    STATION_ID == "BCSI-2019125-QCST03" & SPECIES_CODE == "118J" ~ 8,
+    TRUE ~ PIECES)) %>%
+  
+# fix species codes where R dropped the 0 preceeding the code
+  mutate(SPECIES_CODE = if_else(SPECIES_CODE != "96", as.character(SPECIES_CODE), "096")) %>%
+  left_join(., species, by = "SPECIES_CODE") %>%
+  mutate(DISPLAY_COMMON = if_else(is.na(SPECIES_COMMON_NAME.y), as.character(SPECIES_COMMON_NAME.x), SPECIES_COMMON_NAME.y)) %>%
+  mutate(DISPLAY_COMMON = str_remove_all(DISPLAY_COMMON, "[()](JUVENILES)[)]*"),
+         DISPLAY_COMMON = str_remove(DISPLAY_COMMON, "[()](ADULTS)[)]*"),
+         DISPLAY_COMMON = if_else(DISPLAY_COMMON == "MOON JELLY", "MOON JELLYFISH", DISPLAY_COMMON),
+         DISPLAY_COMMON = if_else(DISPLAY_COMMON == "WATER JELLY", "WATER JELLYFISH", DISPLAY_COMMON)) %>%
+    mutate(COMMON_NAME = str_to_title(DISPLAY_COMMON),
+         SCIENTIFIC_NAME = paste0(str_sub(SPECIES_SCIENCE_NAME, 1,1), str_sub(tolower(SPECIES_SCIENCE_NAME),2))) %>%
+  group_by(COMMON_NAME, SCIENTIFIC_NAME) %>%
+  summarise(numTows = n(),
+            totalWgt = sum(WT, na.rm = TRUE),
+            maxWgt = max(WT, na.rm = TRUE),
+            meanWgt = round(mean(WT, na.rm = TRUE), 0)) %>%
+  ungroup() %>%
+  arrange(desc(totalWgt), desc(numTows)) %>%
+  naniar::replace_with_na(replace = list(meanWgt = NaN, 
+                                         maxWgt = -Inf, 
+                                         totalWgt = 0)) 
+```
+
+```{r lengths}
+
+# # sql query 2019125_lengthFreq2
+# SELECT BRIDGE_COMPLETE.CRUISE, BIOLOGICAL_JUNCTION.FISH_NUMBER, BIOLOGICAL.DATE_CAPTURED, BIOLOGICAL.SPECIES, BIOLOGICAL.SHIP_FL, BIOLOGICAL.SHIP_SL, BIOLOGICAL.SHIP_TL, BIOLOGICAL.SHIP_ML, BIOLOGICAL.SHIP_BD, BIOLOGICAL.SHIP_WT
+# FROM (BIOLOGICAL_JUNCTION INNER JOIN BRIDGE_COMPLETE ON BIOLOGICAL_JUNCTION.STATION_ID = BRIDGE_COMPLETE.STATION_ID) INNER JOIN BIOLOGICAL ON BIOLOGICAL_JUNCTION.FISH_NUMBER = BIOLOGICAL.FISH_NUMBER
+# WHERE (((BRIDGE_COMPLETE.CRUISE)="2019125"));
+
+lengthFreq_orig <- readr::read_csv("data/csv/2019125_lengthFreq.csv",
+                                   col_types = cols(
+  CRUISE = col_double(),
+  FISH_NUMBER = col_character(),
+  DATE_CAPTURED = col_character(), # Access and R date format conflict
+  SPECIES = col_character(),
+  SHIP_FL = col_double(),
+  SHIP_SL = col_double(),
+  SHIP_TL = col_double(),
+  SHIP_ML = col_double(),
+  SHIP_BD = col_double(),
+  SHIP_WT = col_double()
+))
+
+# wrangle data
+lengthFreq <- lengthFreq_orig %>%
+  pivot_longer(., cols = c("SHIP_FL", "SHIP_SL", "SHIP_TL", "SHIP_ML", "SHIP_BD"),
+               names_to = "LengthType",
+               values_to = "LENGTH") %>%
+  mutate( LOG.LEN = log(LENGTH),
+         LOG.WT = log(SHIP_WT)) %>%
+  rename(TRIP_ID = CRUISE,
+         WEIGHT = SHIP_WT,
+         COMMON_NAME = SPECIES)
+```
+
+```{r lengthweight}
+
+lw_length <- lengthFreq %>%
+  filter(!(is.na(LENGTH))) %>%
+  separate(., FISH_NUMBER, into = c("Program", "Survey", "Station", "SPECIES_CODE", "FishNum")) %>%
+  # group adult and juveniles together for this table
+  mutate(COMMON_NAME = case_when(
+    COMMON_NAME == "CHUM ADULT" ~ "CHUM",
+    COMMON_NAME == "CHINOOK ADULT" ~ "CHINOOK",
+    TRUE ~ COMMON_NAME)) %>%
+  group_by(COMMON_NAME) %>%
+  mutate(numTows = length(unique(Station))) %>%
+  summarize(numTows = mean(numTows),            
+            lengthNum = sum(!is.na(LENGTH)),
+            minLen = min(LENGTH, na.rm = TRUE),
+            maxLen = max(LENGTH, na.rm = TRUE),
+            meanLen = round(mean(LENGTH, na.rm = TRUE), 0),
+            .groups = "drop")
+
+lw_weight <- lengthFreq %>%
+  filter(!(is.na(LENGTH))) %>%
+  filter(!(is.na(WEIGHT))) %>%
+  # group adult and juveniles together for this table
+  mutate(COMMON_NAME = case_when(
+    COMMON_NAME == "CHUM ADULT" ~ "CHUM",
+    COMMON_NAME == "CHINOOK ADULT" ~ "CHINOOK",
+    TRUE ~ COMMON_NAME)) %>%
+  group_by(COMMON_NAME) %>%
+  summarize(wgtNum = sum(!is.na(WEIGHT)),
+            minWgt = min(WEIGHT, na.rm = TRUE),
+            maxWgt = max(WEIGHT, na.rm = TRUE),
+            meanWGT = round(mean(WEIGHT, na.rm = TRUE), 0),
+            .groups = "drop")
+
+# join tables
+lw <- lw_length %>%
+  full_join(., lw_weight, by = "COMMON_NAME") %>%
+  mutate(COMMON_NAME = str_to_title(COMMON_NAME),
+         COMMON_NAME = case_when(
+           COMMON_NAME == "Opalescent Squid" ~ "Opalescent Inshore Squid", 
+           COMMON_NAME == "Chinook" ~ "Chinook Salmon",
+           COMMON_NAME == "Pink" ~ "Pink Salmon",
+           COMMON_NAME == "Sockeye" ~ "Sockeye Salmon",
+           COMMON_NAME == "Coho" ~ "Coho Salmon",
+           COMMON_NAME == "Chum" ~ "Chum Salmon",
+           COMMON_NAME == "Herring" ~ "Pacific Herring",
+           COMMON_NAME == "Aequorea" ~ "Water Jellyfish",
+           COMMON_NAME == "Rock Sole" ~ "Flatfish",
+           COMMON_NAME == "Moon Jelly" ~ "Moon Jellyfish",
+           TRUE ~ COMMON_NAME)
+         ) %>%
+  arrange(-lengthNum)
+```
+
+```{r stomach}
+# # sql query
+# SELECT BRIDGE_COMPLETE.CRUISE, BIOLOGICAL.SPECIES, BCSI_STOMACH_CONTENTS.*
+# FROM ((BIOLOGICAL_JUNCTION INNER JOIN BIOLOGICAL ON BIOLOGICAL_JUNCTION.FISH_NUMBER = BIOLOGICAL.FISH_NUMBER) INNER JOIN BCSI_STOMACH_CONTENTS ON BIOLOGICAL_JUNCTION.FISH_NUMBER = BCSI_STOMACH_CONTENTS.FISH_NUMBER) INNER JOIN BRIDGE_COMPLETE ON BIOLOGICAL_JUNCTION.STATION_ID = BRIDGE_COMPLETE.STATION_ID
+# WHERE (((BRIDGE_COMPLETE.CRUISE)="2019125"));
+
+# read csv 
+stomachdf_orig <- readr::read_csv("data/csv/2019125_stomach_orig.csv",
+                             col_types = cols(
+  CRUISE = col_double(),
+  SPECIES = col_character(),
+  FISH_NUMBER = col_character(),
+  `1-PREY_CODE` = col_character(),
+  `1-VOLUME` = col_double(),
+  `1-DIGESTION` = col_double(),
+  `1-PREY_TRACES` = col_character(),
+  `2-PREY_CODE` = col_character(),
+  `2-VOLUME` = col_double(),
+  `2-DIGESTON` = col_double(),
+  `2-PREY_TRACES` = col_character(),
+  `3-PREY_CODE` = col_character(),
+  `3-VOLUME` = col_double(),
+  `3-DIGESTION` = col_double(),
+  `3-PREY_TRACES` = col_character(),
+  COMMENTS = col_character()
+))
+
+# group adult and juveniles together
+stomachdf_orig <- stomachdf_orig %>%
+  mutate(SPECIES = case_when(
+    SPECIES == "CHUM ADULT" ~ "CHUM",
+    SPECIES == "CHINOOK ADULT" ~ "CHINOOK",
+    TRUE ~ SPECIES))
+
+# wrangle data
+stomachTows <- stomachdf_orig %>%
+  separate(., FISH_NUMBER, into = c("Program", "Survey", "Station", "SPECIES_CODE", "FishNum")) %>%
+  group_by(SPECIES) %>%
+  summarise(NumTows = length(unique(Station)))
+
+stomachdf <- stomachdf_orig %>%
+  group_by(SPECIES) %>%
+  summarise(NumStomachs = length(`1-PREY_CODE`),
+            NumEmpty = sum(`1-PREY_CODE` == "M002"),
+            .groups = "drop") %>%
+  mutate(PerEmpty = round((NumEmpty/NumStomachs)*100),0) %>%
+  left_join(., stomachTows, by = "SPECIES")  %>%
+  arrange(-NumTows) %>%
+  mutate(COMMON_NAME = str_to_title(SPECIES),
+         COMMON_NAME = case_when(
+           COMMON_NAME == "Opalescent Squid" ~ "Opalescent Inshore Squid", 
+           COMMON_NAME == "Chinook" ~ "Chinook Salmon",
+           COMMON_NAME == "Pink" ~ "Pink Salmon",
+           COMMON_NAME == "Sockeye" ~ "Sockeye Salmon",
+           COMMON_NAME == "Coho" ~ "Coho Salmon",
+           COMMON_NAME == "Chum" ~ "Chum Salmon",
+           COMMON_NAME == "Herring" ~ "Pacific Herring",
+           COMMON_NAME == "Aequorea" ~ "Water Jellyfish",
+           COMMON_NAME == "Rock sole" ~ "Flatfish",
+           TRUE ~ COMMON_NAME)) %>%
+  select(COMMON_NAME, NumTows, NumStomachs, NumEmpty, PerEmpty)
+
+```
+
+```{r prey}
+
+# wrangle stomach data
+preycode <- stomachdf_orig %>%
+  select(FISH_NUMBER, `1-PREY_CODE`, `2-PREY_CODE`, `3-PREY_CODE`) %>%
+    pivot_longer(., cols = c("1-PREY_CODE", "2-PREY_CODE", "3-PREY_CODE"),
+                 values_drop_na = TRUE, names_to = "PreyLevel", values_to = "PreySpecies") %>%
+  mutate(Level = str_extract_all(PreyLevel, "[0-3]")
+  )
+
+volume <- stomachdf_orig %>%
+  select(FISH_NUMBER, `1-VOLUME`, `2-VOLUME`, `3-VOLUME`) %>%
+    pivot_longer(., cols = c("1-VOLUME", "2-VOLUME", "3-VOLUME"),
+                 values_drop_na = TRUE, names_to = "VolLevel", values_to = "PreyVolume") %>%
+  mutate(Level = str_extract_all(VolLevel, "[0-3]"))
+
+# join together
+prey <- preycode %>%
+  full_join(., volume, by = c("FISH_NUMBER", "Level")) %>%
+  filter(PreySpecies != "M002") %>% # empty code
+  mutate(PreySpecies = if_else(PreySpecies == "96", "096", PreySpecies)) %>%
+  separate(., FISH_NUMBER, into = c("Program", "Survey", "Station", "SPECIES_CODE", "FishNum")) %>%
+  group_by(SPECIES_CODE, PreySpecies) %>%
+  summarise(AvgVolume = round(mean(PreyVolume, na.rm = TRUE),2),
+            NumPrey = length(PreyVolume),
+            .groups = "drop") %>%
+  left_join(., species, by = "SPECIES_CODE") %>%
+  mutate(DISPLAY_COMMON = str_remove_all(SPECIES_COMMON_NAME, "[()](JUVENILES)[)]*"),
+         DISPLAY_COMMON = str_remove(DISPLAY_COMMON, "[()](ADULTS)[)]*")
+         ) %>%
+  mutate(COMMON_NAME = str_to_title(DISPLAY_COMMON)) %>%
+  select(COMMON_NAME, PreySpecies, AvgVolume, NumPrey) %>%
+  left_join(., species, by = c("PreySpecies" = "SPECIES_CODE")) %>%
+  mutate(PREY_NAME = case_when(
+    PreySpecies == "M011" ~ "Unid. Remains",
+    PreySpecies == "0A0" ~ "Invertebrate Remains",
+    PreySpecies == "M010" ~ "Unid. Fishes",
+    PreySpecies == "M014" ~ "Unid. Plankton",
+    PreySpecies == "M004" ~ "Misc. Non-marine",
+    PreySpecies == "OAB" ~ "Polychaetes",
+    PreySpecies == "3B9" ~ "Pteropods",
+    PreySpecies == "3X0" ~ "Ctenophores",
+    PreySpecies == "3GO" ~ "Jellyfish(Scyphozoa)",
+    PreySpecies == "MO11" ~ "Unid. Remains",
+    TRUE ~ SPECIES_COMMON_NAME)) %>%
+  select(COMMON_NAME, PREY_NAME, AvgVolume, NumPrey) %>%
+  mutate(PREY_NAME = str_to_title(PREY_NAME)) %>%
+  arrange(COMMON_NAME, -AvgVolume)
 
 ```
 
