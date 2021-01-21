@@ -115,7 +115,7 @@ library(cowplot) # multiple plots in one
 library(float) # fix the table-page breaks
 library(broom) # display linear model on LW graphs easily
 library(xfun) # to convert numeric values to text
-library(measurements) #to convert lat/lon values
+library(celestial) #to convert lat/lon values
 #library(openxlsx) # load excel data
 library(rgdal) # to load shapefiles
 library(naniar) # function replace_with_na
@@ -590,6 +590,29 @@ prey <- preycode %>%
   select(COMMON_NAME, PREY_NAME, AvgVolume, NumPrey) %>%
   mutate(PREY_NAME = str_to_title(PREY_NAME)) %>%
   arrange(COMMON_NAME, -AvgVolume)
+
+```
+
+```{r bridge}
+
+bridge <- tows %>%
+  mutate(Date = as.character(lubridate::ymd(str_c(YEAR, MONTH, DAY, sep = "-"))),
+         # conver to DMS
+         START_LAT_DMS = str_remove_all(deg2dms(START_LAT, "cat", " ", 0), "\\+"),
+         START_LAT_DMS = str_c(str_sub(START_LAT_DMS,1,2), "\u00B0", " ",
+         str_sub(START_LAT_DMS,4,5), "' ", str_sub(START_LAT_DMS,7,8), '" N'),
+         END_LAT_DMS = str_remove_all(deg2dms(END_LAT, "cat", " ", 0), "\\+"),
+         END_LAT_DMS = str_c(str_sub(END_LAT_DMS,1,2), "\u00B0", " ",
+         str_sub(END_LAT_DMS,4,5), "' ", str_sub(END_LAT_DMS,7,8), '" N'),
+         
+         # LONG
+        START_LONG_DMS = str_remove_all(deg2dms((START_LONG + 90), "cat", " ", 0), "-"),
+         START_LONG_DMS =  str_c(as.character(as.numeric(str_sub(START_LONG_DMS,1,2)) + 90), "\u00B0", " ", str_sub(START_LONG_DMS,4,5), "' ", str_sub(START_LONG_DMS,7,8), '" W'),
+        END_LONG_DMS = str_remove_all(deg2dms((END_LONG + 90), "cat", " ", 0), "-"),
+         END_LONG_DMS =  str_c(as.character(as.numeric(str_sub(END_LONG_DMS,1,2)) + 90), "\u00B0", " ", str_sub(END_LONG_DMS,4,5), "' ", str_sub(END_LONG_DMS,7,8), '" W'))
+         
+         
+
 
 ```
 
