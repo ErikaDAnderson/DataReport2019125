@@ -14,19 +14,17 @@
 
 ```
 
-(ref:mapctd) Oceanographic and zooplankton sampling locations during the `r surveyName` from `r surveyDateRange` on the *`r vessel`*. There were ?? Seabird 25 CTD casts (red circles) and ?? zooplankton vertical tows (orange triangles).
+(ref:mapctd) Oceanographic and zooplankton sampling locations during the `r surveyName` from `r surveyDateRange` on the *`r vessel`*. There were `r nrow(ctd_simp)` Seabird 25 CTD casts and `r nrow(plankton_simp)` zooplankton vertical tows.
 
 ```{r mapctd, fig.pos="H", fig.cap = "(ref:mapctd)", warning=FALSE}
 
-events_ctd <- events %>%
-  filter(Type == "ROS" | Type == "CTD")
-  
+# on survey 2019-125 both event happened at every location
+# therefore no need to show both
   basemap +
-    geom_point(data = events_ctd,
-             aes(Start_Long_DD, Start_Lat_DD, shape = Type, color = Type),
-             size = 3) +
-    scale_color_manual(values = c("darkred", "orange")) +
-    theme(legend.position = "none")
+    geom_point(data = ctd_simp,
+      aes(LONG, LAT),
+             size = 3, color = "darkred")
+
   
 
 ```
