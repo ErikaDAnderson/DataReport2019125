@@ -595,7 +595,7 @@ prey <- preycode %>%
 
 ```{r bridge}
 
-bridge <- tows %>%
+bridgetow <- tows %>%
   mutate(Date = as.character(lubridate::ymd(str_c(YEAR, MONTH, DAY, sep = "-"))),
          # conver to DMS
          START_LAT_DMS = str_remove_all(deg2dms(START_LAT, "cat", " ", 0), "\\+"),
@@ -609,9 +609,92 @@ bridge <- tows %>%
         START_LONG_DMS = str_remove_all(deg2dms((START_LONG + 90), "cat", " ", 0), "-"),
          START_LONG_DMS =  str_c(as.character(as.numeric(str_sub(START_LONG_DMS,1,2)) + 90), "\u00B0", " ", str_sub(START_LONG_DMS,4,5), "' ", str_sub(START_LONG_DMS,7,8), '" W'),
         END_LONG_DMS = str_remove_all(deg2dms((END_LONG + 90), "cat", " ", 0), "-"),
-         END_LONG_DMS =  str_c(as.character(as.numeric(str_sub(END_LONG_DMS,1,2)) + 90), "\u00B0", " ", str_sub(END_LONG_DMS,4,5), "' ", str_sub(END_LONG_DMS,7,8), '" W'))
-         
-         
+         END_LONG_DMS =  str_c(as.character(as.numeric(str_sub(END_LONG_DMS,1,2)) + 90), "\u00B0", " ", str_sub(END_LONG_DMS,4,5), "' ", str_sub(END_LONG_DMS,7,8), '" W')) %>%
+  
+  mutate(DURATION = round(DUR * 60, 0), # from hours to minutes
+         SPEED_KM = round(`SOG-KTS`*1.852,1),
+         DISTANCE_KM = round(DISTANCE * 1.852, 2),
+         START_TIME_hm = str_pad(str_extract(str_extract(START_TIME, "[0-9]+[\\:][0-9]+[\\:][0-9]+$"), "^[0-9]+[\\:][0-9]+"), 5, "left", "0"),
+         Usable = if_else(UNUSABLE == FALSE, "Y", "N")) %>%
+  
+  select(EVENT, Date, STATION, GEAR, START_TIME_hm, DURATION, START_LAT_DMS, START_LONG_DMS, END_LAT_DMS, END_LONG_DMS, HEADING, SPEED_KM, DISTANCE_KM, NET_OPENING_WIDTH, NET_OPENING_HEIGHT, WARP, TARGET_DEPTH, START_BOT_DEPTH, END_BOT_DEPTH, Usable) %>%
+
+    dplyr::rename(
+         "Event Number" = EVENT,
+         "Station ID" = STATION,
+         "Net" = GEAR,
+         "Start Time (PDT)" = START_TIME_hm,
+         "Duration (min)" = DURATION,
+         "Start Latitude" = START_LAT_DMS,
+         "Start Longitude" = START_LONG_DMS,
+         "End Latitude" = END_LAT_DMS,
+         "End Longitude" = END_LONG_DMS,
+         "Direction of Tow (deg)" = HEADING,
+         "Vessel Speed (km/h)" = SPEED_KM,
+         "Distance Towed (km)" = DISTANCE_KM,
+         "Net Opening Height (m)" = NET_OPENING_HEIGHT,
+         "Net Opening Width (m)" = NET_OPENING_WIDTH,
+         "Warp Length (m)" = WARP,
+         #"Door Spread (m)" = Doorspread,
+         "Target Headrope Depth (m)" = TARGET_DEPTH,
+         "Start Bottom Depth (m)" = START_BOT_DEPTH,
+         "End Bottom Depth (m)" = END_BOT_DEPTH)
+
+# transpose table into display format
+# tows as column names
+bridge_t <- as.data.frame(t(bridgetow))
+
+# column names as vector
+col_from <- colnames(bridge_t)
+
+# column names from tow number
+col_to <- 1:nrow(bridge)
+
+# rename column names with consequtive tow number
+bridge_t <- bridge_t %>%
+  rename_at(vars(col_from), function(x) col_to)
+
+# make vector for row names
+MeasurementNames <- as.vector(row.names(bridge_t))
+  
+# make function to create discrete tables for display
+breakBridgeTable <- function(df, rowNum, MeasurementNames) {
+  
+  df <- bridge_t %>%
+    select(rowNum) %>%  
+    mutate(`Tow Number` = MeasurementNames) %>%
+    select(`Tow Number`, everything())
+    
+}
+
+# divide the total tows by 3 to make discrete tables
+bridge1 <- breakBridgeTable(bridge_t, 1:6, MeasurementNames)
+bridge2 <- breakBridgeTable(bridge_t, 7:13, MeasurementNames)
+bridge3 <- breakBridgeTable(bridge_t, 14:20, MeasurementNames)
+bridge4 <- breakBridgeTable(bridge_t, 21:27, MeasurementNames)
+bridge5 <- breakBridgeTable(bridge_t, 28:34, MeasurementNames)
+bridge6 <- breakBridgeTable(bridge_t, 35:37, MeasurementNames)
+
+```
+
+```{r CTDdepthtime}
+
+# date, start time, bottom depth, gear depth for CTD, Bongo Vert
+# recommend start lat/long and end lat/long also
+
+ocean_comp <- ctd_orig %>%
+  full_join(., plankton_orig, by = c("CRUISE","STATION_ID")) %>%
+  mutate(DATE_PT = as.character(mdy(str_extract(DATE, "\\d{2}/[0-9]+/[0-9]+"))),
+         BONGO_START_TIME_hm = str_pad(str_extract(str_extract(START_TIME_BONGO, "[0-9]+[\\:][0-9]+[\\:][0-9]+$"), "^[0-9]+[\\:][0-9]+"), 5, "left", "0"),
+         CTD_START_UTC = mdy_hms(TIME_UTC, tz = "UTC"),
+         CTD_START_PT = with_tz(CTD_START_UTC, "America/Los_Angeles"),
+         CTD_START_TIME_hm = str_pad(str_extract(str_extract(CTD_START_PT, "[0-9]+[\\:][0-9]+[\\:][0-9]+$"), "^[0-9]+[\\:][0-9]+"), 5, "left", "0"),
+         BONGO_DEPTH = if_else(is.na(RBR_DEPTH), TARGET_DEPTH, RBR_DEPTH)) %>%
+  select(DATE_PT, STATION, CTD_LAT, CTD_LONG, CTD_START_TIME_hm, BOTTOM_DEPTH, CTD_DEPTH, BONGO_LAT, BONGO_LONG, BONGO_START_TIME_hm, BOT_DEPTH, BONGO_DEPTH)
+
+```
+
+```{r catchAppendix}
 
 
 ```
