@@ -349,7 +349,7 @@ sepMix <- tibble(
   WT = mixWT50)
 
 # wrangle data
-catch <- catch_orig %>%
+catch2 <- catch_orig %>%
   # omit any unusable tows; no aborted tows in 2019-125
   # remove salmon mix as idividual species are already listed
   filter(SPECIES_COMMON_NAME != "SALMON MIX") %>%
@@ -357,9 +357,9 @@ catch <- catch_orig %>%
 
 # add seperate jelly and squid mix values
 # remove when database back end is updated
-catch <- rbind(sepMix, catch)
+catch3 <- rbind(sepMix, catch2)
 
-catch <- catch %>%  
+catch4 <- catch3 %>%  
   # fix counts that are subsample (not total) from same station ***checked datasheets
   # ****remove once database back end updated
   mutate(PIECES2 = case_when(
@@ -378,7 +378,9 @@ catch <- catch %>%
          DISPLAY_COMMON = if_else(DISPLAY_COMMON == "MOON JELLY", "MOON JELLYFISH", DISPLAY_COMMON),
          DISPLAY_COMMON = if_else(DISPLAY_COMMON == "WATER JELLY", "WATER JELLYFISH", DISPLAY_COMMON)) %>%
     mutate(COMMON_NAME = str_to_title(DISPLAY_COMMON),
-         SCIENTIFIC_NAME = paste0(str_sub(SPECIES_SCIENCE_NAME, 1,1), str_sub(tolower(SPECIES_SCIENCE_NAME),2))) %>%
+         SCIENTIFIC_NAME = paste0(str_sub(SPECIES_SCIENCE_NAME, 1,1), str_sub(tolower(SPECIES_SCIENCE_NAME),2)))
+  
+catch <- catch4 %>%  
   group_by(COMMON_NAME, SCIENTIFIC_NAME) %>%
   summarise(numTows = n(),
             totalWgt = sum(WT, na.rm = TRUE),
@@ -648,7 +650,7 @@ bridge_t <- as.data.frame(t(bridgetow))
 col_from <- colnames(bridge_t)
 
 # column names from tow number
-col_to <- 1:nrow(bridge)
+col_to <- 1:nrow(bridgetow)
 
 # rename column names with consequtive tow number
 bridge_t <- bridge_t %>%
@@ -680,7 +682,7 @@ bridge6 <- breakBridgeTable(bridge_t, 35:37, MeasurementNames)
 ```{r CTDdepthtime}
 
 # date, start time, bottom depth, gear depth for CTD, Bongo Vert
-# recommend start lat/long and end lat/long also
+# for this version include start lat/long and end lat/long
 
 ocean_comp <- ctd_orig %>%
   full_join(., plankton_orig, by = c("CRUISE","STATION_ID")) %>%
@@ -696,6 +698,65 @@ ocean_comp <- ctd_orig %>%
 
 ```{r catchAppendix}
 
+# find event numbers to join by station
+stations <- tows %>%
+  select(EVENT, STATION_ID)
+
+# find any unusable tows for catch data
+removeStations <- bridgetow %>%
+  filter(Usable == "N") %>%
+  pull(`Station ID`)
+
+# wrangle catch data
+catchApp <- catch4 %>%
+  # omit any unusable tows
+  filter(!(STATION_ID %in% removeStations)) %>%
+  left_join(., stations, by = "STATION_ID") %>%
+  select(COMMON_NAME, EVENT, WT) %>%
+  group_by(COMMON_NAME, EVENT) %>%
+  summarize(WT_total = sum(WT, na.rm = TRUE), 
+            .groups = "drop") %>%
+  # use kg for this table
+  mutate(WT_KG = round(WT_total/ 1000,2)) %>%
+  select(-WT_total) %>%
+  filter(!(is.na(WT_KG))) %>%
+  dplyr::rename(`Event Number` = EVENT)
+
+catch_spread <- catchApp %>%
+  pivot_wider(., names_from = `Event Number`, values_from = WT_KG) %>%
+  arrange(COMMON_NAME) 
+
+# make vector for species names
+speciesNames <- as.vector(catch_spread$COMMON_NAME)
+
+# make function to create discrete tables for displaying catch
+# and summary total to bottom row
+breakcatchTable <- function(colNum, speciesNames, catch_spread) {
+  
+  df <- catch_spread %>%
+  select(-COMMON_NAME) %>%
+    select(colNum) %>%
+    mutate(`Event Number` = str_to_title(as.character(speciesNames))) %>%
+    select(`Event Number`, everything())
+  
+  # create summary totals
+summaryfunc <- function(z) if (is.numeric(z)) sum(z, na.rm = TRUE) else ''
+sumrow <- as.data.frame(lapply(df, summaryfunc))
+sumrow$Event.Number <- as.character(sumrow$Event.Number)
+sumrow[1,1] <- "TOTAL" # *** need to add if else to leave unusable tows as - here
+
+# create vector of column names to match
+colNamesdf <- colnames(df)
+colnames(sumrow) <- colNamesdf
+
+df <- rbind(df, sumrow)
+}
+
+# these column numbers need to be modified in appendix catchTable section if they change
+catchApp1 <- breakcatchTable(1:11, speciesNames, catch_spread)
+catchApp2 <- breakcatchTable(12:22, speciesNames, catch_spread)
+catchApp3 <- breakcatchTable(23:33, speciesNames, catch_spread)
+catchApp4 <- breakcatchTable(34:37, speciesNames, catch_spread)
 
 ```
 
