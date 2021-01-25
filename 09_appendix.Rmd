@@ -72,6 +72,39 @@ csas_table(
 
 \newpage
 
+# CATCH DATA {#app:appCatch}  
+
+(ref:catchTableCaption) Catch (kg) of species (or taxonomic groups where species identification could not be made with certainty) captured during the `r surveyName` from `r surveyDateRange` on the *`r vessel`*. Species with no weights (released alive or too small) are not included in this table.
+
+```{r catchTable, results = 'asis'}
+
+csasdown::csas_table(catchApp1,
+                     caption = "(ref:catchTableCaption)",
+                     font_size = 12,
+                     format = "latex", landscape = TRUE,
+                     extra_header = c("Tow", as.character(1:11)),
+                     ex_align = "r", ex_line_sep = 0) %>%
+  row_spec(21, hline_after = T)
+
+# create function for catch appendix tables
+
+catchAppTablefn <- function(df, headerCols) {
+  
+  csasdown::csas_table(df,
+                     font_size = 12,
+                     format = "latex", landscape = TRUE,
+                     extra_header = c("Tow", as.character(headerCols)),
+                     ex_align = "r", ex_line_sep = 0) %>%
+  row_spec(21, hline_after = T)
+  
+}
+
+catchAppTablefn(catchApp2, 12:22)
+catchAppTablefn(catchApp3, 23:33)
+catchAppTablefn(catchApp4, 34:37)
+
+```
+\clearpage
 
 <!-- At the end of your appendices add: -->
 `r if(knitr:::is_latex_output()) '% end csasdown appendix'`
