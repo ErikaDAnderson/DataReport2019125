@@ -7,8 +7,68 @@ After that, all subsequent sections will be turned into appendices. -->
 
 \clearpage
 
-# THE FIRST APPENDIX {#app:first-appendix}
+# NET SPECIFICATIONS {#app:first-appendix}
 
+(ref:coastalnet) Net specifications (side view only) for the coastal LFS 7742 trawl net the `r surveyName` from `r surveyDateRange` on the *`r vessel`*.
+
+```{r coastalnet, fig.cap="(ref:coastalnet)"}
+
+knitr::include_graphics("data/LFS7742_side.png")
+
+```
+
+
+# TRAWL BRIDGE LOG DATA {#app:appBridge} 
+
+(ref:bridgetable) Bridge log information for trawl tows during the `r surveyName` aboard the *`r vessel`*, `r surveyDateRange`.
+
+```{r bridgetable, results='asis'}
+
+csasdown::csas_table(
+  bridge1,
+  caption = "(ref:bridgetable)",
+  format = "latex", landscape = TRUE,
+  font_size = 10)
+
+# additional tables
+csasdown::csas_table(bridge2, 
+                      format = "latex",  landscape = TRUE) 
+csasdown::csas_table(bridge3, #
+                      format = "latex",  landscape = TRUE) 
+csasdown::csas_table(bridge4, 
+                     format = "latex",  landscape = TRUE) 
+csasdown::csas_table(bridge5, 
+                     format = "latex",  landscape = TRUE) 
+csasdown::csas_table(bridge6, 
+                     format = "latex",  landscape = TRUE) 
+
+```
+
+\newpage
+
+# CTD CASTS AND ZOOPLANKTON TOWS {#app:appOcean}  
+  
+(ref:oceantable) CTD casts and vertical bongo tow times and depths during the `r surveyName` from `r surveyDateRange` on the *`r vessel`*.
+
+```{r oceantable, results='asis'}
+
+# write table
+# column_spec causes warning if you do it in one step with vectors
+#kableExtra::kable(
+csas_table(
+  ocean_wider,
+  caption = "(ref:oceantable)",
+  format = "latex", 
+  repeat_header = TRUE, repeat_header_text = "continued",
+  extra_header = c("", "", "CTD", "","","", "", "BONGO", "", "","",""),
+  col_names = c("Date", "Station",
+                "Lat", "Long", 
+                "Start\nTime\n(PDT)", "Bottom\nDepth\n(m)","Gear\nDepth\n(m)",
+                "Lat", "Long",
+                "Start\nTime\n(PDT)", "Bottom\nDepth\n(m)","Gear\nDepth\n(m)"))
+```
+
+\newpage
 
 
 <!-- At the end of your appendices add: -->
