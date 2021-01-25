@@ -17,6 +17,7 @@ knitr::include_graphics("data/LFS7742_side.png")
 
 ```
 
+\FloatBarrier
 
 # TRAWL BRIDGE LOG DATA {#app:appBridge} 
 
@@ -32,19 +33,20 @@ csasdown::csas_table(
 
 # additional tables
 csasdown::csas_table(bridge2, 
-                      format = "latex",  landscape = TRUE) 
+                      format = "latex", font_size = 10,  landscape = TRUE) 
 csasdown::csas_table(bridge3, #
-                      format = "latex",  landscape = TRUE) 
+                      format = "latex", font_size = 10,  landscape = TRUE)  
 csasdown::csas_table(bridge4, 
-                     format = "latex",  landscape = TRUE) 
+                     format = "latex", font_size = 10,  landscape = TRUE) 
 csasdown::csas_table(bridge5, 
-                     format = "latex",  landscape = TRUE) 
+                     format = "latex", font_size = 10,  landscape = TRUE) 
 csasdown::csas_table(bridge6, 
-                     format = "latex",  landscape = TRUE) 
+                     format = "latex", font_size = 10,  landscape = TRUE)  
 
 ```
 
 \newpage
+\FloatBarrier
 
 # CTD CASTS AND ZOOPLANKTON TOWS {#app:appOcean}  
   
@@ -58,9 +60,9 @@ csasdown::csas_table(bridge6,
 csas_table(
   ocean_wider,
   caption = "(ref:oceantable)",
-  format = "latex", 
+  format = "latex", landscape = TRUE,
   repeat_header = TRUE, repeat_header_text = "continued",
-  extra_header = c("", "", "CTD", "","","", "", "BONGO", "", "","",""),
+  extra_header = c("", "", "", "", "CTD", "","","", "", "BONGO", "", ""),
   col_names = c("Date", "Station",
                 "Lat", "Long", 
                 "Start\nTime\n(PDT)", "Bottom\nDepth\n(m)","Gear\nDepth\n(m)",
