@@ -66,6 +66,7 @@ basemap +
 
 ```
 
+  
 (ref:pkcpue) Juvenile Pink Salmon (*Oncorhynchus gorbusha*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r pkcpue, fig.pos="H", fig.cap = "(ref:pkcpue)", warning=FALSE}
@@ -120,7 +121,7 @@ basemap +
 ```
   
   
-Juvenile Sockeye Salmon (*Oncorhynchus nerka*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
+(ref:secpue) Juvenile Sockeye Salmon (*Oncorhynchus nerka*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r secpue, fig.pos="H", fig.cap = "(ref:secpue)", warning=FALSE}
 
