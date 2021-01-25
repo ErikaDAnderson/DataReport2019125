@@ -30,7 +30,7 @@
 
 ```
 
-(ref:photo) Sorting juvenile salmon, juvenile sablefish, moon jellyfish, and lions mane jellyfish (photo credit E.Anderson).
+(ref:photo) Sorting catch of juvenile Pacific Salmon (*Oncorhynchus* spp.), juvenile Sablefish (*Anoplopoma fimbria*), Moon Jellyfish (*Aurelia labiata*), and Lions Mane Jellyfish (*Cyanea capillata*) (photo credit E.Anderson).
 
 ```{r photo, fig.pos="H", fig.cap = "(ref:photo)"}
 
