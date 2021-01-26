@@ -2,7 +2,7 @@
 
 Fisheries and Oceans Canada conducted an ecosystem-based survey, targeting juvenile Pacific Salmon (*Oncorhynchus* spp.) from `r surveyDateRange` on the *`r vessel`*. The main objectives of this surveys were:
 
-1. to determine the abundance, condition, distribution, and genetic stock composition of juvenile Pacific Salmon present from Queen Charlotte Strait to Dixon Entrance in the fall,  
+1. to determine the abundance, condition, distribution, and genetic stock composition of juvenile Pacific Salmon present in the fall,  
 
 2. the associated physical oceanography, and
 
