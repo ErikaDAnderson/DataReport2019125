@@ -22,7 +22,7 @@ abstract_other: |
   Voici le résumé. 
   
 output:
- csasdown::techreport_word:
+ csasdown::techreport_pdf:
    french: false
    copy_sty: false
    line_nums: true
@@ -185,7 +185,7 @@ tows_orig <- readr::read_csv("data/csv/2019125_tows_orig.csv",
 # # load as csv
 ctd_orig <- readr::read_csv("data/csv/2019125_ctd_orig.csv")
 
-ctd_simp <- ctd_orig %>%
+ctdSimp <- ctd_orig %>%
   mutate(EVENT_TYPE = "ctd",
          LAT = CTD_LAT,
          LONG = CTD_LONG) %>%
@@ -196,14 +196,14 @@ ctd_simp <- ctd_orig %>%
 # # load as csv
 plankton_orig <- readr::read_csv("data/csv/2019125_plankton_orig.csv")
 
-plankton_simp <- plankton_orig %>%
+planktonSimp <- plankton_orig %>%
   mutate(EVENT_TYPE = "bongo",
          LAT = BONGO_LAT,
          LONG = BONGO_LONG) %>%
   select(EVENT_TYPE, LAT, LONG)
 
 # combine ctd and plankton data for map
-ocean <- rbind(ctd_simp, plankton_simp)
+ocean <- rbind(ctdSimp, planktonSimp)
 
 # wrangle tow data
 tows <- tows_orig %>%
@@ -597,7 +597,7 @@ prey <- preycode %>%
 
 ```{r bridge}
 
-bridgetow <- tows %>%
+bridgetow_orig <- tows %>%
   mutate(Date = as.character(lubridate::ymd(str_c(YEAR, MONTH, DAY, sep = "-"))),
          # conver to DMS
          START_LAT_DMS = str_remove_all(deg2dms(START_LAT, "cat", " ", 0), "\\+"),
@@ -617,10 +617,13 @@ bridgetow <- tows %>%
          SPEED_KM = round(`SOG-KTS`*1.852,1),
          DISTANCE_KM = round(DISTANCE * 1.852, 2),
          START_TIME_hm = str_pad(str_extract(str_extract(START_TIME, "[0-9]+[\\:][0-9]+[\\:][0-9]+$"), "^[0-9]+[\\:][0-9]+"), 5, "left", "0"),
-         Usable = if_else(UNUSABLE == FALSE, "Y", "N")) %>%
+         Usable = if_else(UNUSABLE == FALSE, "Y", "N"),
+         SPEED_NM = `SOG-KTS`) %>%
   
-  select(EVENT, Date, STATION, GEAR, START_TIME_hm, DURATION, START_LAT_DMS, START_LONG_DMS, END_LAT_DMS, END_LONG_DMS, HEADING, SPEED_KM, DISTANCE_KM, NET_OPENING_WIDTH, NET_OPENING_HEIGHT, WARP, TARGET_DEPTH, START_BOT_DEPTH, END_BOT_DEPTH, Usable) %>%
+  select(EVENT, Date, STATION, GEAR, START_TIME_hm, DURATION, START_LAT_DMS, START_LONG_DMS, END_LAT_DMS, END_LONG_DMS, HEADING, SPEED_KM, SPEED_NM, DISTANCE_KM, NET_OPENING_WIDTH, NET_OPENING_HEIGHT, WARP, TARGET_DEPTH, START_BOT_DEPTH, END_BOT_DEPTH, Usable)
 
+bridgetow <- bridgetow_orig %>%
+  select(-SPEED_NM) %>%
     dplyr::rename(
          "Event Number" = EVENT,
          "Station ID" = STATION,
