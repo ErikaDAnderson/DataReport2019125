@@ -40,33 +40,6 @@ knitr::include_graphics("data/SamplingPhoto.png")
 ```
 
 
-(ref:cmcpue) Juvenile Chum Salmon (*Oncorhynchus keta*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
-
-```{r cmcpue, fig.pos="H", fig.cap = "(ref:cmcpue)", warning=FALSE}
-
-# wrangle data for specific species
-cmcpue <- salmondf %>%
-    filter(CM_JUV != 0) %>%
-  select(EVENT, START_LAT, START_LONG, `ESTIMATED_CATCHES_ BY_WT`, CM_JUV_KM3)
-
-# df for zero catch
-cmzero <- salmondf %>%
-  filter(CM_JUV == 0) %>%
-    select(EVENT, START_LAT, START_LONG, CM_JUV_KM3)
-
-# map cpue
-basemap +
-  geom_point(data = cmcpue,
-             aes(START_LONG, START_LAT, size = CM_JUV_KM3),
-             color = "darkred") +
-    geom_point(data = cmzero,
-             aes(START_LONG, START_LAT),
-             shape = 3) +
-  labs(size = "Juveniles \n per km3") 
-
-```
-
-  
 (ref:pkcpue) Juvenile Pink Salmon (*Oncorhynchus gorbusha*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r pkcpue, fig.pos="H", fig.cap = "(ref:pkcpue)", warning=FALSE}
@@ -93,7 +66,33 @@ basemap +
 
 ```
   
-  
+(ref:cmcpue) Juvenile Chum Salmon (*Oncorhynchus keta*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
+
+```{r cmcpue, fig.pos="H", fig.cap = "(ref:cmcpue)", warning=FALSE}
+
+# wrangle data for specific species
+cmcpue <- salmondf %>%
+    filter(CM_JUV != 0) %>%
+  select(EVENT, START_LAT, START_LONG, `ESTIMATED_CATCHES_ BY_WT`, CM_JUV_KM3)
+
+# df for zero catch
+cmzero <- salmondf %>%
+  filter(CM_JUV == 0) %>%
+    select(EVENT, START_LAT, START_LONG, CM_JUV_KM3)
+
+# map cpue
+basemap +
+  geom_point(data = cmcpue,
+             aes(START_LONG, START_LAT, size = CM_JUV_KM3),
+             color = "darkred") +
+    geom_point(data = cmzero,
+             aes(START_LONG, START_LAT),
+             shape = 3) +
+  labs(size = "Juveniles \n per km3") 
+
+```
+
+
 (ref:ckcpue) Juvenile Chinook Salmon (*Oncorhynchus tschawytscha*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r ckcpue, fig.pos="H", fig.cap = "(ref:ckcpue)", warning=FALSE}
@@ -174,11 +173,8 @@ basemap +
 
 ``` 
 
-  
-  
-(ref:forkcm) Juvenile Chum Salmon (*Oncorhynchus keta*) length frequency plot as sampled during the `r surveyName` aboard the *`r vessel`*, `r surveyDateRange` (A). Double log-transformed length-weight regression with outliers removed, using a Bonferroni outlier test (B).
 
-```{r forkcm, fig.cap="(ref:forkcm)"}
+```{r forkfunction}
 
 ### create function to repeat graphs on different species
 graphSpecies <- function(lengthFreq, thisspecies) {
@@ -263,25 +259,20 @@ list(dfbar, dffit)
 
 }
 
-# remove adult chum since there were only two and no other adult salmon sampled
-lengthFreqCmJuv <- lengthFreq %>%
-  filter(LENGTH < 500)
-
-# create graphs 
-chumList <- graphSpecies(lengthFreqCmJuv, "CHUM")
-chumbar <- chumList[[1]]
-chumLine <- chumList[[2]]
-chumPlots <- plot_grid(chumbar, chumLine, ncol = 1,
-                          labels = c('A', 'B'), label_size = 12)
-chumPlots
 
 ```
+  
 
 (ref:forkpk) Juvenile Pink Salmon (*Oncorhynchus gorbusha*) length frequency plot as sampled during the `r surveyName` aboard the *`r vessel`*, `r surveyDateRange` (A). Double log-transformed length-weight regression with outliers removed, using a Bonferroni outlier test (B).
 
 ```{r forkpk, fig.cap="(ref:forkpk)"}
 
-pinkList <- graphSpecies(lengthFreq, "PINK")
+# remove adult salmon
+lengthFreqPKJuv <- lengthFreq %>%
+  filter(COMMON_NAME == "PINK" & LENGTH < 300)
+
+
+pinkList <- graphSpecies(lengthFreqPKJuv, "PINK")
 pinkbar <- pinkList[[1]]
 pinkLine <- pinkList[[2]]
 pinkPlots <- plot_grid(pinkbar, pinkLine, ncol = 1,
@@ -291,11 +282,34 @@ pinkPlots
 ```
 
 
+(ref:forkcm) Juvenile Chum Salmon (*Oncorhynchus keta*) length frequency plot as sampled during the `r surveyName` aboard the *`r vessel`*, `r surveyDateRange` (A). Double log-transformed length-weight regression with outliers removed, using a Bonferroni outlier test (B).
+
+```{r forkcm, fig.cap="(ref:forkcm)"}
+
+# remove adult salmon
+lengthFreqCMJuv <- lengthFreq %>%
+  filter(COMMON_NAME == "CHUM" & LENGTH < 300)
+
+# create graphs 
+chumList <- graphSpecies(lengthFreqCMJuv, "CHUM")
+chumbar <- chumList[[1]]
+chumLine <- chumList[[2]]
+chumPlots <- plot_grid(chumbar, chumLine, ncol = 1,
+                          labels = c('A', 'B'), label_size = 12)
+chumPlots
+
+```
+
+
 (ref:forkck) Juvenile Chinook Salmon (*Oncorhynchus tshawytscha)*) length frequency plot as sampled during the `r surveyName` aboard the *`r vessel`*, `r surveyDateRange` (A). Double log-transformed length-weight regression with outliers removed, using a Bonferroni outlier test. No linear equation is included since there were so few caught. (B). 
 
 ```{r forkck, fig.cap="(ref:forkck)"}
 
-chinookList <- graphSpecies(lengthFreq, "CHINOOK")
+# remove adult salmon
+lengthFreqCKJuv <- lengthFreq %>%
+  filter(COMMON_NAME == "CHINOOK" & LENGTH < 350)
+
+chinookList <- graphSpecies(lengthFreqCKJuv, "CHINOOK")
 chinookbar <- chinookList[[1]]
 chinookLine <- chinookList[[2]]
 chinookPlots <- plot_grid(chinookbar, chinookLine, ncol = 1,
@@ -309,7 +323,11 @@ chinookPlots
 
 ```{r forkse, fig.cap="(ref:forkse)"}
 
-sockeyeList <- graphSpecies(lengthFreq, "SOCKEYE")
+# remove adult salmon
+lengthFreqSEJuv <- lengthFreq %>%
+  filter(COMMON_NAME == "SOCKEYE" & LENGTH < 300)
+
+sockeyeList <- graphSpecies(lengthFreqSEJuv, "SOCKEYE")
 sockeyebar <- sockeyeList[[1]]
 sockeyeLine <- sockeyeList[[2]]
 sockeyePlots <- plot_grid(sockeyebar, sockeyeLine, ncol = 1,
@@ -323,7 +341,11 @@ sockeyePlots
 
 ```{r forkco, fig.cap="(ref:forkco)"}
 
-cohoList <- graphSpecies(lengthFreq, "COHO")
+# remove adult salmon
+lengthFreqCOJuv <- lengthFreq %>%
+  filter(COMMON_NAME == "COHO" & LENGTH < 350)
+
+cohoList <- graphSpecies(lengthFreqCOJuv, "COHO")
 cohobar <- cohoList[[1]]
 cohoLine <- cohoList[[2]]
 cohoPlots <- plot_grid(cohobar, cohoLine, ncol = 1,
