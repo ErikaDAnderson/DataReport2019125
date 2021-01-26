@@ -71,11 +71,11 @@ salmonByWt <- catch %>%
   arrange(-totalWgt) %>%
   pull(COMMON_NAME)
 
-salmonByWt_commas <- paste0(str_trim(salmonByWt), collapse = ", ")
+salmonByWtCommas <- paste0(str_trim(salmonByWt), collapse = ", ")
 
 ```
 
-For each of `r numSpecies` species captured during the survey, the number of tows in which the species was present, total catch weight, maximum catch weight, and mean catch weight per tow for usable tows is presented in Table \@ref(tab:catchtable). The most abundance species caught by weight were `r abundantspeciesnames1`, primarily caught in one set (`r abundantspeciesnames1kg` kg), `r abundantspeciesnames2` (`r abundantspeciesnames2kg` kg), then `r abundantspeciesnames3` (`r abundantspeciesnames3kg` kg; Table \@ref(tab:catchtable)). All species of juvenile Pacific Salmon were caught. The order of abundance by weight was: ` r salmonByWt_commas`. Total catch for the survey from usable tows was `r totalcatchkg` kg, with `r totalsalmonkg` kg or `r percentsalmon`% Pacific Salmon. Detailed catch composition for each tow is included in Appendix \@ref(app:appCatch).
+For each of `r numSpecies` species captured during the survey, the number of tows in which the species was present, total catch weight, maximum catch weight, and mean catch weight per tow for usable tows is presented in Table \@ref(tab:catchtable). The most abundance species caught by weight were `r abundantspeciesnames1`, primarily caught in one set (`r abundantspeciesnames1kg` kg), `r abundantspeciesnames2` (`r abundantspeciesnames2kg` kg), then `r abundantspeciesnames3` (`r abundantspeciesnames3kg` kg; Table \@ref(tab:catchtable)). All species of juvenile Pacific Salmon were caught. The order of abundance by weight was: `r salmonByWtCommas`. Total catch for the survey from usable tows was `r totalcatchkg` kg, with `r totalsalmonkg` kg or `r percentsalmon`% Pacific Salmon. Detailed catch composition for each tow is included in Appendix \@ref(app:appCatch).
 
 Pink Salmon had the highest abundance by count and were most abundant from Johnstone Strait to Queen Charlotte Strait (Figure \@ref(fig:pkcpue)). Chum Salmon were second most abundant by count, with the highest catches within Queen Charlotte Strait, the entrance to Rivers Inlet, and beside Thurlow Islands (Figure \@ref(fig:cmcpue)). Chinook Salmon were abundant in Wells Passage and southern Johnstone Strait (Figure \@ref(fig:ckcpue). Juvenile Sockeye Salmon were abundant at the border of Johnstone Strait and Queen Charlotte Strait and one tow within Queen Charlotte Sound (Figure \@ref(fig:secpue)). Finally, Coho Salmon were the least abundant salmon species with only 30 individuals, mainly caught in Queen Charlotte Strait and the entrance to Rivers Inlet (Figure \@ref(fig:cocpue)). 
 
