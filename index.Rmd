@@ -642,6 +642,29 @@ bridgetow <- tows %>%
          "Start Bottom Depth (m)" = START_BOT_DEPTH,
          "End Bottom Depth (m)" = END_BOT_DEPTH)
 
+# get target depth specific min and max warp
+minWarp0 <- bridgetow %>%
+  filter(`Target Headrope Depth (m)` == 0) %>%
+  summarize(minWarp = min(`Warp Length (m)`, na.rm = TRUE)) %>%
+  pull(minWarp)
+
+minWarp15 <- bridgetow %>%
+  filter(`Target Headrope Depth (m)` == 15) %>%
+  summarize(minWarp = min(`Warp Length (m)`, na.rm = TRUE)) %>%
+  pull(minWarp)
+
+maxWarp0 <- bridgetow %>%
+  filter(`Target Headrope Depth (m)` == 0) %>%
+  summarize(maxWarp = max(`Warp Length (m)`, na.rm = TRUE)) %>%
+  pull(maxWarp)
+
+maxWarp15 <- bridgetow %>%
+  filter(`Target Headrope Depth (m)` == 15) %>%
+  summarize(maxWarp = max(`Warp Length (m)`, na.rm = TRUE)) %>%
+  pull(maxWarp)
+# on this survey it overlap completing so use overall warp
+
+
 # transpose table into display format
 # tows as column names
 bridge_t <- as.data.frame(t(bridgetow))
