@@ -2,8 +2,11 @@
 
 Fisheries and Oceans Canada conducted an ecosystem-based survey, targeting juvenile Pacific Salmon (*Oncorhynchus* spp.) from `r surveyDateRange` on the *`r vessel`*. The main objectives of this surveys were:
 
-1. to determine the abundance, condition, distribution, and genetic stock composition of juvenile Pacific Salmon present from Queen Charlotte Strait to Dixon Entrance in the fall, and 
+1. to determine the abundance, condition, distribution, and genetic stock composition of juvenile Pacific Salmon present from Queen Charlotte Strait to Dixon Entrance in the fall,  
 
-2. to optimize the offshore LFS 1142 trawl net setup and deployment and oceanographic sampling protocols for the new fisheries research vessel, the *`r vessel`* in preparation for the [2022 Pan-Pacific High Seas Expedition](https://yearofthesalmon.org/high-seas-expeditions/) of the North Pacific Anadromous Fisheries Commission (NPAFC). 
+2. the associated physical oceanography, and
 
-This survey supports research into linkages between oceanographic conditions, fish abundance and community composition, Pacific Salmon ocean ecology and forecasting adult returns. This data report documents the biological, oceanographic, zooplankton, and nekton data and samples collected during the `r surveyName` from `r surveyDateRange`.  
+
+3. the distribution and biomass of prey species, including zooplankton.
+
+This survey supports research into linkages between oceanographic conditions, fish abundance and community composition, Pacific Salmon ocean ecology and forecasting adult returns. This data report documents the biological, oceanographic, and zooplankton data and samples collected during the `r surveyName` from `r surveyDateRange`.  
