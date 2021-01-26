@@ -7,7 +7,7 @@ After that, all subsequent sections will be turned into appendices. -->
 
 \clearpage
 
-# NET SPECIFICATIONS {#app:first-appendix}
+# NET SPECIFICATIONS {#app:appNet}
 
 (ref:coastalnet) Net specifications (side view only) for the coastal LFS 7742 trawl net the `r surveyName` from `r surveyDateRange` on the *`r vessel`*.
 
