@@ -139,6 +139,8 @@ surveyYear <- "2019"
 
 vessel <- "CFV Sea Crest"
 
+surveyRegion <- "North East of Vancouver Island"
+
 ```
 
 ```{r locations}
@@ -425,6 +427,64 @@ lengthFreq <- lengthFreq_orig %>%
          WEIGHT = SHIP_WT,
          COMMON_NAME = SPECIES)
 ```
+
+```{r biosamplesRaw}
+
+# loaded from ship data since samples collected not all in database
+# should add to database and change column names to standard field names
+
+# read csv 
+biosamplesdf <- readr::read_csv("data/csv/2019-125_SEACREST_SHIP_ DATA_indiv.csv",
+                                     col_types = 
+                                       cols(
+                        `CRUISE NUMBER` = col_character(),
+                        STATION = col_character(),
+                        SPECIES = col_factor(),
+                        `FISH NUMBER` = col_double(),
+                        `FL (mm)` = col_double(),
+                        `WT (mm)` = col_double(),
+                        CWT = col_character(),
+                        `FIN CLIP` = col_character(),
+                        SEX = col_character(),
+                        `OTOLITH #` = col_character(),
+                        `(0/1)` = col_double(),
+                        `DNA #` = col_double(),
+                        SAMPLE = col_character(),
+                        `1-PREY` = col_character(),
+                        `1-VOL (cc)` = col_double(),
+                        `1-D` = col_double(),
+                        `2-PREY` = col_character(),
+                        `2-VOL (cc)` = col_character(),
+                        `2-D` = col_double(),
+                        `3-PREY` = col_character(),
+                        `3-VOL (cc)` = col_double(),
+                        `3-D` = col_double(),
+                        COMMENTS = col_character()
+                      ))
+
+
+numDNA <- biosamplesdf %>%
+  filter(!(is.na(`DNA #`))) %>%
+  nrow()
+         
+numOtoliths <- biosamplesdf %>%
+  filter(!(is.na(`OTOLITH #`))) %>%
+  nrow()
+
+numWholebodies <- biosamplesdf %>%
+  filter(SAMPLE == "W") %>%
+  nrow()
+
+numMuscles <- biosamplesdf %>%
+  filter(SAMPLE == "M") %>%
+  nrow()
+  
+numCTW <- biosamplesdf %>%
+  filter(CWT == "Y") %>%
+  nrow()
+
+```
+
 
 ```{r lengthweight}
 
