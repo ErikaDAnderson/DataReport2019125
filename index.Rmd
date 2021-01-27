@@ -139,7 +139,7 @@ surveyYear <- "2019"
 
 vessel <- "CFV Sea Crest"
 
-surveyRegion <- "North East of Vancouver Island"
+surveyRegion <- "off North East of Vancouver Island"
 
 ```
 
