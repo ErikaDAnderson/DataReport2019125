@@ -631,9 +631,7 @@ prey <- preycode %>%
             NumPrey = length(PreyVolume),
             .groups = "drop") %>%
   left_join(., species, by = "SPECIES_CODE") %>%
-  mutate(DISPLAY_COMMON = str_remove_all(SPECIES_COMMON_NAME, "[()](JUVENILES)[)]*"),
-         DISPLAY_COMMON = str_remove(DISPLAY_COMMON, "[()](ADULTS)[)]*")
-         ) %>%
+  mutate(DISPLAY_COMMON = str_remove_all(SPECIES_COMMON_NAME, "[()](JUVENILES)[)]*")) %>%
   mutate(COMMON_NAME = str_to_title(DISPLAY_COMMON)) %>%
   select(COMMON_NAME, PreySpecies, AvgVolume, NumPrey) %>%
   left_join(., species, by = c("PreySpecies" = "SPECIES_CODE")) %>%
