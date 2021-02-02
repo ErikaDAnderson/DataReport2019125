@@ -228,7 +228,7 @@ coast <- readOGR("data/Spatial/Land.shp", verbose = FALSE)
     xlim(minLon, maxLon) +
     ylim(minLat, maxLat) +
     labs(x = "Longitude",
-         y = "Laititude") +
+         y = "Latitude") +
     theme_bw()
 
 ```
