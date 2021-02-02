@@ -64,9 +64,9 @@ csas_table(
   repeat_header = TRUE, repeat_header_text = "continued",
   extra_header = c("", "", "CTD", "","","", "", "BONGO", "", "", "", ""),
   col_names = c("Date", "Station",
-                "Lat", "Long", 
+                "Latitude", "Longitude", 
                 "Start\nTime\n(PDT)", "Bottom\nDepth\n(m)","Gear\nDepth\n(m)",
-                "Lat", "Long",
+                "Latitude", "Longitude", 
                 "Start\nTime\n(PDT)", "Bottom\nDepth\n(m)","Gear\nDepth\n(m)"))
 ```
 
