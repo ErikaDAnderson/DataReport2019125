@@ -63,6 +63,7 @@ csas_table(
   format = "latex", landscape = TRUE, font_size = 9,
   repeat_header = TRUE, repeat_header_text = "continued",
   extra_header = c("", "", "CTD", "","","", "", "BONGO", "", "", "", ""),
+  ex_align = "l",
   col_names = c("Date", "Station",
                 "Latitude", "Longitude", 
                 "Start\nTime\n(PDT)", "Bottom\nDepth\n(m)","Gear\nDepth\n(m)",
