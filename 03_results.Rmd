@@ -155,7 +155,7 @@ ctdmindepth <- min(ctd_orig$CTD_DEPTH)
   
 ```
 
-CTD casts and water samples were completed at `r nrow(ctd_orig)` sites with cast depths ranging from `r ctdmindepth` m to `r ctdmaxdepth` m (Appendix \@ref(app:appOcean)). Samples were collected for nutrients and chlorophyll at approximately 10 m from the surface. Oceanographic data from the CTD casts and nutrient analysis of the water samples are archived online within the [Water Properties Data Inventory](https://www.waterproperties.ca) under cruise number 2019-125 as well as [Canadian Inegrated Ocean Observing System](https://cioos.ca/) or CIOOS. 
+CTD casts and water samples were completed at `r nrow(ctd_orig)` sites with cast depths ranging from `r ctdmindepth` m to `r ctdmaxdepth` m (Appendix \@ref(app:appOcean)). Samples were collected for nutrients and chlorophyll at approximately 10 m below the surface. Oceanographic data from the CTD casts and nutrient analysis of the water samples are archived online within the [Water Properties Data Inventory](https://www.waterproperties.ca) under cruise number 2019-125, as well as [Canadian Integrated Ocean Observing System](https://cioos.ca/) or CIOOS. 
 
 ## ZOOPLANKTON
 ```{r planktonresults}
