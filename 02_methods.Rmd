@@ -23,6 +23,6 @@ A standalone [Sea-bird](https://www.seabird.com/) 25 CTD (conductivity-temperatu
 At `r nrow(planktonSimp)` zooplankton stations (Figure \@ref(fig:mapctd)), vertical tows were conducted to approximately 250 m or within 10 m of the bottom with two 60 cm diameter, 253 micrometer mesh nets mounted in a bongo-drum style frame. Zooplankton collected from the flow meter side were preserved in 10% formalin and sent to the zooplankton laboratory at the Institute of Ocean Sciences, Fisheries and Oceans Canada (Sidney, BC) for species classification and enumeration. The remaining zooplankton sample was sorted into four size fractions by successively sieving through 8.0, 1.7, 1.0, and 0.25 mm screens. Individual size fractions were frozen for future stable isotope, energy density, and proximate analyses.
 
 ## ACOUSTIC DATA
-Acoustic data was collected throughout the survey using the vessel [SIMRAD](https://www.kongsberg.com/maritime/products/commercial-fisheries/echo-sounders/) ES60 echosounder.
+Acoustic data was collected throughout the survey using the vessel [SIMRAD](https://www.kongsberg.com/maritime/products/commercial-fisheries/echo-sounders/) ES60 echo sounder.
 
 \clearpage
