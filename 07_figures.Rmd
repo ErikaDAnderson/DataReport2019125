@@ -30,7 +30,7 @@
 
 ```
 
-(ref:photo) Sorting catch of juvenile Pacific Salmon (*Oncorhynchus* spp.), juvenile Sablefish (*Anoplopoma fimbria*), Moon Jellyfish (*Aurelia labiata*), and Lions Mane Jellyfish (*Cyanea capillata*) (photo credit E.Anderson).
+(ref:photo) Sorting catch of juvenile Pacific Salmon (*Oncorhynchus* spp.), juvenile Sablefish (*Anoplopoma fimbria*), Moon Jellyfish (*Aurelia labiata*), and Lions Mane Jellyfish (*Cyanea capillata*) (photo credit E. Anderson).
 
 ```{r photo, fig.pos="H", fig.cap = "(ref:photo)"}
 
@@ -40,7 +40,7 @@ knitr::include_graphics("data/SamplingPhoto.png")
 ```
 
   
-(ref:cmcpue) Juvenile Chum Salmon (*Oncorhynchus keta*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
+(ref:cmcpue) Juvenile Chum Salmon (*Oncorhynchus keta*) catch per km^3^ for each tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r cmcpue, fig.pos="H", fig.cap = "(ref:cmcpue)", warning=FALSE}
 
@@ -67,7 +67,7 @@ basemap +
 ```
 
 
-(ref:pkcpue) Juvenile Pink Salmon (*Oncorhynchus gorbusha*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
+(ref:pkcpue) Juvenile Pink Salmon (*Oncorhynchus gorbusha*) catch per km^3^ for each tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r pkcpue, fig.pos="H", fig.cap = "(ref:pkcpue)", warning=FALSE}
 
@@ -94,7 +94,7 @@ basemap +
 ```
 
 
-(ref:ckcpue) Juvenile Chinook Salmon (*Oncorhynchus tschawytscha*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
+(ref:ckcpue) Juvenile Chinook Salmon (*Oncorhynchus tschawytscha*) catch per km^3^ for each tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r ckcpue, fig.pos="H", fig.cap = "(ref:ckcpue)", warning=FALSE}
 
@@ -121,7 +121,7 @@ basemap +
 ```
   
   
-(ref:secpue) Juvenile Sockeye Salmon (*Oncorhynchus nerka*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
+(ref:secpue) Juvenile Sockeye Salmon (*Oncorhynchus nerka*) catch per km^3^ for each tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r secpue, fig.pos="H", fig.cap = "(ref:secpue)", warning=FALSE}
 
@@ -148,7 +148,7 @@ basemap +
 ```
 
 
-(ref:cocpue) Juvenile Coho Salmon (*Oncorhynchus kitsutch*) catch per km^3^ per tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
+(ref:cocpue) Juvenile Coho Salmon (*Oncorhynchus kitsutch*) catch per km^3^ for each tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r cocpue, fig.pos="H", fig.cap = "(ref:cocpue)", warning=FALSE}
 
