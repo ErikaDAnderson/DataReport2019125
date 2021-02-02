@@ -17,7 +17,7 @@ coastalwide <- bridgetow %>%
 
 ```
 
-This survey completed `r coastaltows` coastal LFS 7742 trawl net tows (Appendix \@ref(app:appBridge)). The coastal LFS 7742 trawl net averaged `r coastalhigh` m high by `r coastalwide` m wide, or an area of `r round(coastalhigh * coastalwide)` m^2^, during surface tows on this survey. This mouth area is larger than expected, but similar to a previous survey on the *FV Sea Crest* where the coastal LFS 7742 trawl net mouth opening averaged 19 m high by 41 m wide at the surface, or area of (779 m^2^; [@anderson2019]). All catch per unit effort (CPUE) reported here are standardized by swept volume to standardize catch values.
+This survey completed `r coastaltows` coastal LFS 7742 trawl net tows (Appendix \@ref(app:appBridge)). The coastal LFS 7742 trawl net averaged `r coastalhigh` m high by `r coastalwide` m wide, or an area of `r round(coastalhigh * coastalwide)` m^2^, during surface tows on this survey. This mouth area is larger than originally designed, but similar to a previous survey on the *FV Sea Crest* where the coastal LFS 7742 trawl net mouth opening averaged 19 m high by 41 m wide at the surface, or area of (779 m^2^; [@anderson2019]). All catch per unit effort (CPUE) reported here are standardized by swept volume to standardize catch values.
 
 ## CATCH COMPOSITION
 ```{r catchcomposition}
@@ -81,7 +81,7 @@ Pink Salmon had the highest abundance by count and were most abundant from Johns
 
 ## BIOLOGICAL SAMPLES
 
-Samples were collected for DNA stock composition (`r numDNA`), otoliths (`r numOtoliths`), energy density (`r numWholebodies`), stable isotope analysis (`r numMuscles`), and coded wire tags (`r numCTW`). These biological samples are located at the Pacific Biological Station, Fisheries and Oceans Canada (Nanaimo, BC) awaiting laboratory analysis.
+Samples were collected for DNA stock composition (`r numDNA`), otoliths (`r numOtoliths`), energy density (`r numWholebodies`), stable isotope analysis (`r numMuscles`), and coded wire tags (`r numCTW`). These biological samples are located at the Pacific Biological Station, Fisheries and Oceans Canada (Nanaimo, BC).
 
 ## LENGTH AND WEIGHT
 ```{r lengthandweight}
@@ -109,7 +109,7 @@ smlsalmonWGT <- smlsalmon %>% pull(meanWGT)
 
 ```
 
-Length frequencies and length-weight relationships are presented for juvenile Pacific Salmon species in Figures \@ref(fig:forkpk) to \@ref(fig:forkco). Double log transformed length-weight regressions coefficients were similar for three of the five Pacific Salmon species (Pink Salmon, Chum Salmon, Chinook Salmon). Sockeye Salmon and Coho Salmon had smaller slopes compared to the other Pacific Salmon species (Figures \@ref(fig:forkco) and \@ref(fig:forkco)). Mean, minimum, and maximum lengths and weights of `r lwspeciesnum` species were recorded, with all five Pacific Salmon species represented (Table \@ref(tab:lwtable)), Juvenile `r bigsalmonNam` had the largest mean length (`r bigsalmonLen` mm) and weight (`r bigsalmonWGT` g), whereas juvenile `r smlsalmonNam` had the smallest mean length (`r smlsalmonLen` mm) and weight (`r smlsalmonWGT` g) of the Pacific Salmon species. These size differences are expected given the different life histories of Pacific Salmon species. For example, juvenile Sockeye Salmon may migrate to the marine environment in their first year, whereas juvenile Coho Salmon migrate later and some individuals remain in the coastal environment [@quinn2018].
+Length frequencies and length-weight relationships are presented for juvenile Pacific Salmon species in Figures \@ref(fig:forkpk) to \@ref(fig:forkco). Double log transformed length-weight regressions coefficients were similar for three of the five Pacific Salmon species (Pink Salmon, Chum Salmon, Chinook Salmon). Sockeye Salmon and Coho Salmon had smaller slopes compared to the other Pacific Salmon species (Figures \@ref(fig:forkse) and \@ref(fig:forkco)). Mean, minimum, and maximum lengths and weights of `r lwspeciesnum` species were recorded, with all five Pacific Salmon species represented (Table \@ref(tab:lwtable)), Juvenile `r bigsalmonNam` had the largest mean length (`r bigsalmonLen` mm) and weight (`r bigsalmonWGT` g), whereas juvenile `r smlsalmonNam` had the smallest mean length (`r smlsalmonLen` mm) and weight (`r smlsalmonWGT` g) of the Pacific Salmon species. These size differences are expected given the different life histories of Pacific Salmon species. For example, juvenile Sockeye Salmon may migrate to the marine environment in their first year, whereas juvenile Coho Salmon migrate later and some individuals remain in the coastal environment [@quinn2018].
 
 ## STOMACH CONTENTS
 ```{r stomachcontents}
