@@ -2,6 +2,6 @@
 
 # ACKNOWLEDGEMENTS
 
-We would like to acknowledge that we conducted scientific research in the following First Nations territories: Da'naxda'xw-Awaetlala, Gwa'sala-Nakwaxda'xw, Gwawaenuk, Heitsuk, Homalco, K’òmoks, Kitkatla (Gitxaala), Kwakiutl, Laich-Kwil-Tach, Mamalilikulla-Qwe'Qwa'Sot'Em, 'Namgis, Quatsino, Tlatlasikwala, Tlowitsis, Tsawataineuk, Wuikinuxv. We would like to thank Captain Nathan Dobie, and crew of the *`r vessel`*. We appreciate the expertise of the following science staff who participated in the survey: Cameron Freshwater, Erika Neilson, Ben Snow.
+We would like to acknowledge that we conducted scientific research in the following First Nations territories: Da'naxda'xw-Awaetlala, Gwa'sala-Nakwaxda'xw, Gwawaenuk, Heitsuk, Homalco, K’òmoks, Kitkatla (Gitxaala), Kwakiutl, Laich-Kwil-Tach, Mamalilikulla-Qwe'Qwa'Sot'Em, 'Namgis, Quatsino, Tlatlasikwala, Tlowitsis, Tsawataineuk, Wuikinuxv. We would like to thank Captain Nathan Dobie, and crew of the *`r vessel`*. We appreciate the expertise of the following science staff who participated in the survey: Cameron Freshwater, Erika Nielsen, Ben Snow.
 
 \newpage
