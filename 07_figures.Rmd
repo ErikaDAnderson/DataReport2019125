@@ -35,7 +35,7 @@
 ```{r photo, fig.pos="H", fig.cap = "(ref:photo)"}
 
 # load image
-knitr::include_graphics("data/SamplingPhoto.png")
+knitr::include_graphics("data/SamplingPhoto_sml.png")
 
 ```
 
