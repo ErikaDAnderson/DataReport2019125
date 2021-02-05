@@ -185,7 +185,22 @@ tows_orig <- readr::read_csv("data/csv/2019125_tows_orig.csv",
 # WHERE (((BRIDGE_COMPLETE.CRUISE)="2019125"));
 
 # # load as csv
-ctd_orig <- readr::read_csv("data/csv/2019125_ctd_orig.csv")
+ctd_orig <- readr::read_csv("data/csv/2019125_ctd_orig.csv",
+                            col_types = 
+                              cols(
+                              CRUISE = col_double(),
+                              STATION_ID = col_character(),
+                              EVENT = col_double(),
+                              STATION = col_character(),
+                              CTD_INSTRUMENT = col_character(),
+                              CTD_SERIAL_NUMBER = col_double(),
+                              DATE_UTC = col_character(),
+                              TIME_UTC = col_character(),
+                              CTD_LAT = col_double(),
+                              CTD_LONG = col_double(),
+                              BOTTOM_DEPTH = col_double(),
+                              CTD_DEPTH = col_double()
+                            ))
 
 ctdSimp <- ctd_orig %>%
   mutate(EVENT_TYPE = "ctd",
@@ -196,7 +211,21 @@ ctdSimp <- ctd_orig %>%
 # location data for vertical plankton tows from PLANKTON table
 # sql
 # # load as csv
-plankton_orig <- readr::read_csv("data/csv/2019125_plankton_orig.csv")
+plankton_orig <- readr::read_csv("data/csv/2019125_plankton_orig.csv",
+                                 col_types = 
+                                   cols(
+                                CRUISE = col_double(),
+                                STATION_ID = col_character(),
+                                EVENT = col_double(),
+                                BONGO_LAT = col_double(),
+                                BONGO_LONG = col_double(),
+                                DATE = col_character(),
+                                BOT_DEPTH = col_double(),
+                                TARGET_DEPTH = col_double(),
+                                RBR_DEPTH = col_double(),
+                                START_TIME_BONGO = col_character(),
+                                END_TIME_BONGO = col_character()
+                              ))
 
 planktonSimp <- plankton_orig %>%
   mutate(EVENT_TYPE = "bongo",
@@ -304,30 +333,30 @@ salmondf <- salmondf_orig %>%
 
 catch_orig <- readr::read_csv("data/csv/2019125_catch_orig.csv",
                               col_types = cols(
-  CRUISE = col_double(),
-  STATION_ID = col_character(),
-  SPECIES_CODE = col_character(),
-  SPECIES_COMMON_NAME = col_character(),
-  PIECES = col_double(),
-  WT = col_double()
-))
+                              CRUISE = col_double(),
+                              STATION_ID = col_character(),
+                              SPECIES_CODE = col_character(),
+                              SPECIES_COMMON_NAME = col_character(),
+                              PIECES = col_double(),
+                              WT = col_double()
+                            ))
 
 # upload GFBIO species table for common and scientific names
 species_orig <- read_csv("data/csv/C_Species.csv",
                          col_types = cols(
-  SPECIES_CODE = col_character(),
-  SPECIES_DESC = col_character(),
-  ROW_VERSION = col_double(),
-  SPECIES_COMMON_NAME = col_character(),
-  SPECIES_SCIENCE_NAME = col_character(),
-  ITIS_TSN = col_double(),
-  TAXONOMIC_RANK = col_character(),
-  RSTY_ID = col_double(),
-  PARENT_RSTY_ID = col_double(),
-  PARENT_TAXONOMIC_UNIT = col_character(),
-  SPECIES_GROUPING = col_character(),
-  LSID = col_character()
-))
+                          SPECIES_CODE = col_character(),
+                          SPECIES_DESC = col_character(),
+                          ROW_VERSION = col_double(),
+                          SPECIES_COMMON_NAME = col_character(),
+                          SPECIES_SCIENCE_NAME = col_character(),
+                          ITIS_TSN = col_double(),
+                          TAXONOMIC_RANK = col_character(),
+                          RSTY_ID = col_double(),
+                          PARENT_RSTY_ID = col_double(),
+                          PARENT_TAXONOMIC_UNIT = col_character(),
+                          SPECIES_GROUPING = col_character(),
+                          LSID = col_character()
+                        ))
 
 # simiplify species table
 species <- species_orig %>%
@@ -387,8 +416,8 @@ catch <- catch4 %>%
   summarise(numTows = n(),
             totalWgt = sum(WT, na.rm = TRUE),
             maxWgt = max(WT, na.rm = TRUE),
-            meanWgt = round(mean(WT, na.rm = TRUE), 0)) %>%
-  ungroup() %>%
+            meanWgt = round(mean(WT, na.rm = TRUE), 0), 
+            .groups = "drop") %>%
   arrange(desc(totalWgt), desc(numTows)) %>%
   naniar::replace_with_na(replace = list(meanWgt = NaN, 
                                          maxWgt = -Inf, 
@@ -549,23 +578,23 @@ lw <- lw_length %>%
 # read csv 
 stomachdf_orig <- readr::read_csv("data/csv/2019125_stomach_orig.csv",
                              col_types = cols(
-  CRUISE = col_double(),
-  SPECIES = col_character(),
-  FISH_NUMBER = col_character(),
-  `1-PREY_CODE` = col_character(),
-  `1-VOLUME` = col_double(),
-  `1-DIGESTION` = col_double(),
-  `1-PREY_TRACES` = col_character(),
-  `2-PREY_CODE` = col_character(),
-  `2-VOLUME` = col_double(),
-  `2-DIGESTON` = col_double(),
-  `2-PREY_TRACES` = col_character(),
-  `3-PREY_CODE` = col_character(),
-  `3-VOLUME` = col_double(),
-  `3-DIGESTION` = col_double(),
-  `3-PREY_TRACES` = col_character(),
-  COMMENTS = col_character()
-))
+                            CRUISE = col_double(),
+                            SPECIES = col_character(),
+                            FISH_NUMBER = col_character(),
+                            `1-PREY_CODE` = col_character(),
+                            `1-VOLUME` = col_double(),
+                            `1-DIGESTION` = col_double(),
+                            `1-PREY_TRACES` = col_character(),
+                            `2-PREY_CODE` = col_character(),
+                            `2-VOLUME` = col_double(),
+                            `2-DIGESTON` = col_double(),
+                            `2-PREY_TRACES` = col_character(),
+                            `3-PREY_CODE` = col_character(),
+                            `3-VOLUME` = col_double(),
+                            `3-DIGESTION` = col_double(),
+                            `3-PREY_TRACES` = col_character(),
+                            COMMENTS = col_character()
+                          ))
 
 # group adult and juveniles together
 stomachdf_orig <- stomachdf_orig %>%
@@ -578,7 +607,7 @@ stomachdf_orig <- stomachdf_orig %>%
 stomachTows <- stomachdf_orig %>%
   separate(., FISH_NUMBER, into = c("Program", "Survey", "Station", "SPECIES_CODE", "FishNum")) %>%
   group_by(SPECIES) %>%
-  summarise(NumTows = length(unique(Station)))
+  summarise(NumTows = length(unique(Station)), .groups = "drop")
 
 stomachdf <- stomachdf_orig %>%
   group_by(SPECIES) %>%
@@ -657,7 +686,7 @@ prey <- preycode %>%
 
 bridgetow_orig <- tows %>%
   mutate(Date = as.character(lubridate::ymd(str_c(YEAR, MONTH, DAY, sep = "-"))),
-         # conver to DMS
+         # convert to DMS
          START_LAT_DMS = str_remove_all(deg2dms(START_LAT, "cat", " ", 0), "\\+"),
          START_LAT_DMS = str_c(str_sub(START_LAT_DMS,1,2), "\u00B0", " ",
          str_sub(START_LAT_DMS,4,5), "' ", str_sub(START_LAT_DMS,7,8), '" N'),
@@ -738,7 +767,7 @@ col_to <- 1:nrow(bridgetow)
 
 # rename column names with consequtive tow number
 bridge_t <- bridge_t %>%
-  rename_at(vars(col_from), function(x) col_to)
+  rename_at(all_of(col_from), function(x) col_to)
 
 # make vector for row names
 MeasurementNames <- as.vector(row.names(bridge_t))
@@ -747,7 +776,7 @@ MeasurementNames <- as.vector(row.names(bridge_t))
 breakBridgeTable <- function(df, rowNum, MeasurementNames) {
   
   df <- bridge_t %>%
-    select(rowNum) %>%  
+    select(all_of(rowNum)) %>%  
     mutate(`Tow Number` = MeasurementNames) %>%
     select(`Tow Number`, everything())
     
@@ -833,7 +862,7 @@ breakcatchTable <- function(colNum, speciesNames, catch_spread) {
   
   df <- catch_spread %>%
   select(-COMMON_NAME) %>%
-    select(colNum) %>%
+    select(all_of(colNum)) %>%
     mutate(`Event Number` = str_to_title(as.character(speciesNames))) %>%
     select(`Event Number`, everything())
   
