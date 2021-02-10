@@ -1,6 +1,6 @@
 # INTRODUCTION
 
-Fisheries and Oceans Canada conducted an ecosystem-based survey, targeting juvenile Pacific Salmon (*Oncorhynchus* spp.) from `r surveyDateRange` on the *`r vessel`*. The main objectives of this surveys were:
+Fisheries and Oceans Canada conducted an ecosystem-based midwater trawl survey, targeting juvenile Pacific Salmon (*Oncorhynchus* spp.) from `r surveyDateRange` on the *`r vessel`*. The main objectives of this surveys were:
 
 1. to determine the abundance, condition, distribution, and genetic stock composition of juvenile Pacific Salmon present `r surveyRegion` in the fall,  
 
