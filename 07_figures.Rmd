@@ -240,6 +240,8 @@ dffit <- ggplot(df.LW) +
   geom_point(aes(LOG.LEN, LOG.WT)) +
   labs(x = "log(Length (mm))",
        y = "log(Weight (g))") +
+  theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12)) +
   #geom_text(aes(xtext, ytext), label = lm_text, parse = TRUE) +
   theme_bw()
 } else {
@@ -251,6 +253,8 @@ dffit <- ggplot(df.LW) +
        y = "log(Weight (g))") +
   geom_text(aes(xtext, ytext), label = lm_text, parse = TRUE,
             vjust = "inward", hjust = "inward") +
+    theme(axis.title = element_text(size = 12),
+        axis.text = element_text(size = 12)) +
   theme_bw()
   
 }
