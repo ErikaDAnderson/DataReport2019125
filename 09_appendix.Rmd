@@ -60,7 +60,7 @@ csasdown::csas_table(bridge6,
 csas_table(
   ocean_wider,
   caption = "(ref:oceantable)",
-  format = "latex", landscape = TRUE, font_size = 11,
+  format = "latex", landscape = TRUE, font_size = 12,
   repeat_header = TRUE, repeat_header_text = "continued",
   extra_header = c("", "", "", "", "CTD", "","", "BONGO", "", ""),
   ex_align = "l",
