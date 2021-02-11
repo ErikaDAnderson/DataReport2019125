@@ -24,5 +24,3 @@ At `r nrow(planktonSimp)` zooplankton stations (Figure \@ref(fig:mapctd), Append
 
 ## ACOUSTIC DATA
 Acoustic data was collected throughout the survey using the vessel [SIMRAD](https://www.kongsberg.com/maritime/products/commercial-fisheries/echo-sounders/) ES60 echo sounder.
-
-\clearpage
