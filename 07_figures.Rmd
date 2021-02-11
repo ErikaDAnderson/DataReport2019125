@@ -40,33 +40,6 @@ knitr::include_graphics("data/SamplingPhoto_sml.png")
 ```
 
   
-(ref:cmcpue) Juvenile Chum Salmon (*Oncorhynchus keta*) catch per km^3^ for each tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
-
-```{r cmcpue, fig.pos="H", fig.cap = "(ref:cmcpue)", warning=FALSE}
-
-# wrangle data for specific species
-cmcpue <- salmondf %>%
-    filter(CM_JUV != 0) %>%
-  select(EVENT, START_LAT, START_LONG, `ESTIMATED_CATCHES_ BY_WT`, CM_JUV_KM3)
-
-# df for zero catch
-cmzero <- salmondf %>%
-  filter(CM_JUV == 0) %>%
-    select(EVENT, START_LAT, START_LONG, CM_JUV_KM3)
-
-# map cpue
-basemap +
-  geom_point(data = cmcpue,
-             aes(START_LONG, START_LAT, size = CM_JUV_KM3),
-             color = "darkred") +
-    geom_point(data = cmzero,
-             aes(START_LONG, START_LAT),
-             shape = 3) +
-  labs(size = "Juveniles \n per km3") 
-
-```
-
-
 (ref:pkcpue) Juvenile Pink Salmon (*Oncorhynchus gorbusha*) catch per km^3^ for each tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
 
 ```{r pkcpue, fig.pos="H", fig.cap = "(ref:pkcpue)", warning=FALSE}
@@ -87,6 +60,33 @@ basemap +
              aes(START_LONG, START_LAT, size = PK_JUV_KM3),
              color = "darkred") +
     geom_point(data = pkzero,
+             aes(START_LONG, START_LAT),
+             shape = 3) +
+  labs(size = "Juveniles \n per km3") 
+
+```
+
+
+(ref:cmcpue) Juvenile Chum Salmon (*Oncorhynchus keta*) catch per km^3^ for each tow. Red circles are proportional to catch abundance, and zero catches are shown with a cross (+).
+
+```{r cmcpue, fig.pos="H", fig.cap = "(ref:cmcpue)", warning=FALSE}
+
+# wrangle data for specific species
+cmcpue <- salmondf %>%
+    filter(CM_JUV != 0) %>%
+  select(EVENT, START_LAT, START_LONG, `ESTIMATED_CATCHES_ BY_WT`, CM_JUV_KM3)
+
+# df for zero catch
+cmzero <- salmondf %>%
+  filter(CM_JUV == 0) %>%
+    select(EVENT, START_LAT, START_LONG, CM_JUV_KM3)
+
+# map cpue
+basemap +
+  geom_point(data = cmcpue,
+             aes(START_LONG, START_LAT, size = CM_JUV_KM3),
+             color = "darkred") +
+    geom_point(data = cmzero,
              aes(START_LONG, START_LAT),
              shape = 3) +
   labs(size = "Juveniles \n per km3") 
