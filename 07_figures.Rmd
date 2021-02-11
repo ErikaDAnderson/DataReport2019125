@@ -10,7 +10,10 @@
              size = 3) +
     scale_color_manual(values = c("orange", "darkred")) +
   labs(shape = "Depth", color = "Depth") +
-  theme(legend.position = 'none')
+    theme_bw() +
+    theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14),
+        legend.position = 'none')
 
 
 ```
@@ -24,9 +27,10 @@
   basemap +
     geom_point(data = ctdSimp,
       aes(LONG, LAT),
-             size = 3, color = "darkred")
-
-  
+             size = 3, color = "darkred") +
+      theme_bw() +
+    theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14))
 
 ```
 
@@ -44,6 +48,7 @@ knitr::include_graphics("data/SamplingPhoto_sml.png")
 
 ```{r pkcpue, fig.pos="H", fig.cap = "(ref:pkcpue)", warning=FALSE}
 
+# next iteration make function to graph each species
 # wrangle data for specific species
 pkcpue <- salmondf %>%
     filter(PK_JUV != 0) %>%
@@ -62,7 +67,11 @@ basemap +
     geom_point(data = pkzero,
              aes(START_LONG, START_LAT),
              shape = 3) +
-  labs(size = "Juveniles \n per km3") 
+  labs(size = "Juveniles \n per km3") +
+    theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14))
 
 ```
 
@@ -89,7 +98,11 @@ basemap +
     geom_point(data = cmzero,
              aes(START_LONG, START_LAT),
              shape = 3) +
-  labs(size = "Juveniles \n per km3") 
+  labs(size = "Juveniles \n per km3") +
+    theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14))
 
 ```
 
@@ -116,7 +129,11 @@ basemap +
     geom_point(data = ckzero,
              aes(START_LONG, START_LAT),
              shape = 3) +
-  labs(size = "Juveniles \n per km3") 
+  labs(size = "Juveniles \n per km3") +
+    theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14))
 
 ```
   
@@ -143,7 +160,11 @@ basemap +
     geom_point(data = sezero,
              aes(START_LONG, START_LAT),
              shape = 3) +
-  labs(size = "Juveniles \n per km3") 
+  labs(size = "Juveniles \n per km3") +
+    theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14))
 
 ```
 
@@ -170,7 +191,11 @@ basemap +
     geom_point(data = cozero,
              aes(START_LONG, START_LAT),
              shape = 3) +
-  labs(size = "Juveniles \n per km3") 
+  labs(size = "Juveniles \n per km3") +
+    theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14),
+        legend.text = element_text(size = 14),
+        legend.title = element_text(size = 14))
 
 ``` 
 
@@ -208,7 +233,9 @@ dfbar <- ggplot(df.LW) +
   geom_histogram(aes(LENGTH), binwidth = 5) +
   labs(x = "Length (mm)",
        y = "Count") +
-  theme_bw()
+  theme_bw() +
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14)) 
 
 
 # create function to print equation for the LW regression
@@ -240,10 +267,11 @@ dffit <- ggplot(df.LW) +
   geom_point(aes(LOG.LEN, LOG.WT)) +
   labs(x = "log(Length (mm))",
        y = "log(Weight (g))") +
-  theme(axis.title = element_text(size = 12),
-        axis.text = element_text(size = 12)) +
+    theme_bw() +
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14)) 
   #geom_text(aes(xtext, ytext), label = lm_text, parse = TRUE) +
-  theme_bw()
+
 } else {
   
   # graph log length by weight
@@ -253,9 +281,9 @@ dffit <- ggplot(df.LW) +
        y = "log(Weight (g))") +
   geom_text(aes(xtext, ytext), label = lm_text, parse = TRUE,
             vjust = "inward", hjust = "inward") +
-    theme(axis.title = element_text(size = 12),
-        axis.text = element_text(size = 12)) +
-  theme_bw()
+    theme_bw() +
+    theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 14)) 
   
 }
 
@@ -280,7 +308,7 @@ chumList <- graphSpecies(lengthFreqCMJuv, "CHUM")
 chumbar <- chumList[[1]]
 chumLine <- chumList[[2]]
 chumPlots <- plot_grid(chumbar, chumLine, ncol = 1,
-                          labels = c('A', 'B'), label_size = 12)
+                          labels = c('A', 'B'), label_size = 14)
 chumPlots
 
 ```
