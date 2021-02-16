@@ -9,7 +9,7 @@ After that, all subsequent sections will be turned into appendices. -->
 
 # NET SPECIFICATIONS {#app:appNet}
 
-(ref:coastalnet) Net specifications (side view) for the coastal LFS 7742 trawl net the `r surveyName` from `r surveyDateRange` on the *`r vessel`*.
+(ref:coastalnet) Net specifications (side view) for the LFS 7742 trawl net used during the `r surveyName` from `r surveyDateRange` on the *`r vessel`*.
 
 ```{r coastalnet, fig.cap="(ref:coastalnet)"}
 
