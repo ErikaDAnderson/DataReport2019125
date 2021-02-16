@@ -61,7 +61,9 @@ csas_table(
   ocean_wider,
   caption = "(ref:oceantable)",
   format = "latex", landscape = TRUE, font_size = 12,
-  repeat_header = TRUE, repeat_header_text = "continued",
+  # do not use since doesn't work on pre-split tables
+  # should add this in subsequent reports on all long tables
+  #repeat_header = TRUE, repeat_header_text = "continued",
   extra_header = c("", "", "", "", "CTD", "","", "BONGO", "", ""),
   ex_align = "l",
   col_names = c("Date", "Station",
