@@ -17,7 +17,7 @@ coastalwide <- bridgetow %>%
 
 ```
 
-This survey completed `r coastaltows` coastal LFS 7742 trawl net tows (Appendix \@ref(app:appBridge)). The coastal LFS 7742 trawl net averaged `r coastalhigh` m high by `r coastalwide` m wide, or an area of `r round(coastalhigh * coastalwide)` m^2^, during tows on this survey. This mouth area is larger than originally designed (15 m x 30 m), but similar to a previous survey on the *FV Sea Crest* where the coastal LFS 7742 trawl net mouth opening averaged 19 m high by 41 m wide at the surface, or area of 779 m^2^, and 13 m high by 47 m wide at a headrope depth of 15 m, or area of 611 m^2^ [@anderson2019]. All catch per unit effort (CPUE) reported here are divided by swept volume to standardize catch values.
+This survey completed `r coastaltows` LFS 7742 trawl net tows (Appendix \@ref(app:appBridge)). The LFS 7742 trawl net averaged `r coastalhigh` m high by `r coastalwide` m wide, or an area of `r round(coastalhigh * coastalwide)` m^2^, during tows on this survey. This mouth area is larger than originally designed (15 m x 30 m), but similar to a previous survey on the *FV Sea Crest* where the LFS 7742 trawl net mouth opening averaged 19 m high by 41 m wide at the surface, or area of 779 m^2^, and 13 m high by 47 m wide at a headrope depth of 15 m, or area of 611 m^2^ [@anderson2019]. All catch per unit effort (CPUE) reported here are divided by swept volume to standardize catch values.
 
 ## CATCH COMPOSITION
 ```{r catchcomposition}
